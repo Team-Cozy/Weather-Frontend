@@ -1,13 +1,12 @@
-import axios from 'axios'
+import axios from 'axios';
 
-export class BackendAPI {
+export default class BackendAPI {
+  constructor(baseUrl) {
+    this.axios = axios.create({ baseURL: baseUrl });
+  }
 
-    constructor(baseUrl) {
-        this.axios = axios.create({ baseURL: baseUrl })
-    }
-
-    async getCurrentWeather(location) {
-        const response = await this.axios.get("/weather/current", { params: { lat: 80, lon: 80 } })
-        console.log(response.data)
-    }
+  async getCurrentWeatherFromLocation(lat, lon) {
+    const response = await this.axios.get('/weather/current', { params: { lat, lon } });
+    console.log(response.data);
+  }
 }

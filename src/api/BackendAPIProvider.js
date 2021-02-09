@@ -1,5 +1,6 @@
-
 import { createContext } from 'react';
-import { BackendAPI } from './BackendAPI';
+import BackendAPI from './BackendAPI';
 
-export const BackendAPIContext = createContext(BackendAPI);
+const BackendAPIContext = createContext(BackendAPI);
+
+export default BackendAPIContext;
