@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 export default class BackendAPI {
-  constructor(baseUrl) {
-    this.axios = axios.create({ baseURL: baseUrl });
+  constructor(baseURL) {
+    this.axios = axios.create({ baseURL });
   }
 
   async getCurrentWeatherFromLocation(lat, lon) {
