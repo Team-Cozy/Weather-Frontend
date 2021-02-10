@@ -1,18 +1,16 @@
-import React from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
   Card,
   CardContent,
-  Grid,
-  Typography,
-  colors,
-  makeStyles
+  colors, Grid,
+  makeStyles, Typography
 } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import MoneyIcon from '@material-ui/icons/Money';
+import { Cloud } from '@material-ui/icons';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { ArrowUp, CloudRain } from 'react-feather';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,6 +33,8 @@ const useStyles = makeStyles((theme) => ({
 const Budget = ({ className, ...rest }) => {
   const classes = useStyles();
 
+  const windHeading = 420;
+
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -52,18 +52,18 @@ const Budget = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              BUDGET
+              San Francisco, CA, USA
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              $24,000
+              Partly Cloudy
             </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <MoneyIcon />
+              <Cloud />
             </Avatar>
           </Grid>
         </Grid>
@@ -72,18 +72,19 @@ const Budget = ({ className, ...rest }) => {
           display="flex"
           alignItems="center"
         >
-          <ArrowDownwardIcon className={classes.differenceIcon} />
+          <ArrowUp style={{ transform: `rotate(${windHeading}deg)` }} />
           <Typography
             className={classes.differenceValue}
             variant="body2"
           >
-            12%
+            5 mph NW
           </Typography>
+          <CloudRain />
           <Typography
-            color="textSecondary"
-            variant="caption"
+            className={classes.differenceValue}
+            variant="body2"
           >
-            Since last month
+            15% chance of rain
           </Typography>
         </Box>
       </CardContent>
