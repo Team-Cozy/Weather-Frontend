@@ -8,7 +8,6 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
-import { Cloud } from '@material-ui/icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -38,35 +37,35 @@ function WeatherCardInner({ weather }) {
   console.log(weather);
   const classes = useStyles();
 
+  const chanceOfRain = weather.weather.rain.chance ? weather.weather.rain.chance : 0;
+
   return (
     <>
       <Grid container justify="space-between" spacing={3}>
         <Grid item>
           <Typography color="textSecondary" gutterBottom variant="h6">
-            San Francisco, CA, USA
+            {weather.location.name}
           </Typography>
           <Typography color="textPrimary" variant="h3">
-            {weather.temperature.temp}
+            {weather.weather.temperature.temp}
             &deg;C
-            Partly Cloudy
           </Typography>
         </Grid>
         <Grid item>
-          <Avatar className={classes.avatar}>
-            <Cloud />
-          </Avatar>
+          <Avatar className={classes.avatar} />
         </Grid>
       </Grid>
       <Box mt={2} display="flex" alignItems="center">
-        <ArrowUp style={{ transform: `rotate(${weather.wind.heading}deg)` }} />
+        <ArrowUp style={{ transform: `rotate(${weather.weather.wind.heading}deg)` }} />
         <Typography className={classes.differenceValue} variant="body2">
-          {weather.wind.speed}
+          {weather.weather.wind.speed}
           {' '}
           km/h
         </Typography>
         <CloudRain />
         <Typography className={classes.differenceValue} variant="body2">
-          15% chance of rain
+          {chanceOfRain}
+          % chance of rain
         </Typography>
       </Box>
     </>
@@ -86,7 +85,9 @@ const CurrentWeather = ({ className, ...rest }) => {
 
   // Fetch weather on mount
   useEffect(() => {
-    console.log(latitude, longitude);
+    // Only update weather if there's a position
+    if (!(latitude && latitude)) return;
+
     api.getCurrentWeatherFromLocation(latitude, longitude).then((response) => {
       setWeather(response);
     });
