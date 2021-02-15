@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { ArrowUp, CloudRain } from 'react-feather';
-import { useBackendAPI } from 'src/api/BackendAPIProvider';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { usePosition } from 'use-position';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,6 +1,6 @@
 import { PropTypes } from 'prop-types';
 import React, { createContext, useContext } from 'react';
-import BackendAPI from './BackendAPI';
+import BackendAPI from '../api/BackendAPI';
 
 const BackendAPIContext = createContext(null);
 
