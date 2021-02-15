@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { ArrowUp, CloudRain } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
+import { useUnitConverters } from 'src/components/UnitConversionProvider';
 import { usePosition } from 'use-position';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,8 +35,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function WeatherCardInner({ weather }) {
-  console.log(weather);
   const classes = useStyles();
+  console.log(weather);
+  const { temperature, speed } = useUnitConverters();
 
   const chanceOfRain = weather.weather.rain.chance ? weather.weather.rain.chance : 0;
 
@@ -47,8 +49,11 @@ function WeatherCardInner({ weather }) {
             {weather.location.name}
           </Typography>
           <Typography color="textPrimary" variant="h3">
-            {weather.weather.temperature.temp}
-            &deg;C
+            {weather.weather.status}
+            ,
+            {' '}
+            {temperature.convert(weather.weather.temperature.temp).toFixed(1)}
+            {temperature.units}
           </Typography>
         </Grid>
         <Grid item>
@@ -58,9 +63,9 @@ function WeatherCardInner({ weather }) {
       <Box mt={2} display="flex" alignItems="center">
         <ArrowUp style={{ transform: `rotate(${weather.weather.wind.heading}deg)` }} />
         <Typography className={classes.differenceValue} variant="body2">
-          {weather.weather.wind.speed}
+          {speed.convert(weather.weather.wind.speed).toFixed(1)}
           {' '}
-          km/h
+          {speed.units}
         </Typography>
         <CloudRain />
         <Typography className={classes.differenceValue} variant="body2">

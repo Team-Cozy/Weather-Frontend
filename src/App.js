@@ -7,17 +7,20 @@ import 'src/mixins/chartjs';
 import theme from 'src/theme';
 import routes from 'src/routes';
 import { BackendAPIProvider } from './components/BackendAPIProvider';
+import { UnitConversionProvider } from './components/UnitConversionProvider';
 
 const App = () => {
   const routing = useRoutes(routes);
 
   return (
-    <BackendAPIProvider>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {routing}
-      </ThemeProvider>
-    </BackendAPIProvider>
+    <UnitConversionProvider>
+      <BackendAPIProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          {routing}
+        </ThemeProvider>
+      </BackendAPIProvider>
+    </UnitConversionProvider>
   );
 };
 
