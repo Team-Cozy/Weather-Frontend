@@ -1,9 +1,9 @@
 import { PropTypes } from 'prop-types';
-import React, { createContext, useContext } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 
 const UnitConversionContext = createContext(null);
 
-const fahrenheitConverter = {
+export const fahrenheitConverter = {
   convert: (x) => {
     return (x - 273) * (9 / 5) + 32;
   },
@@ -14,14 +14,14 @@ const fahrenheitConverter = {
 };
 
 // eslint-disable-next-line no-unused-vars
-const celsiusConverter = {
+export const celsiusConverter = {
   convert: (x) => {
     return (x - 273);
   },
   units: '°C'
 };
 
-const mphConverter = {
+export const mphConverter = {
   convert: (x) => {
     return 2.23694 * x;
   },
@@ -37,9 +37,13 @@ const mphConverter = {
  * - Distance: meters
  */
 export function UnitConversionProvider({ children }) {
+  const [temperature, setTemperature] = useState(fahrenheitConverter);
+  const [speed, setSpeed] = useState(mphConverter);
   return (
     <UnitConversionContext.Provider
-      value={{ temperature: fahrenheitConverter, speed: mphConverter }}
+      value={{
+        temperature, setTemperature, speed, setSpeed
+      }}
     >
       {children}
     </UnitConversionContext.Provider>
