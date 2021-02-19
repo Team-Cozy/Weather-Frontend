@@ -91,7 +91,7 @@ const CurrentWeather = ({ className, ...rest }) => {
   // Fetch weather on mount
   useEffect(() => {
     // Only update weather if there's a position
-    if (!(latitude && latitude)) return;
+    if (!(latitude && longitude)) return;
 
     api.getCurrentWeatherFromLocation(latitude, longitude).then((response) => {
       setWeather(response);
