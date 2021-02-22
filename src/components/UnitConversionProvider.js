@@ -7,9 +7,6 @@ export const fahrenheitConverter = {
   convert: (x) => {
     return (x - 273) * (9 / 5) + 32;
   },
-  convertToString: (x) => {
-    return `${fahrenheitConverter.convert(x)} F`;
-  },
   units: '°F'
 };
 
