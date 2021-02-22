@@ -3,14 +3,17 @@ import {
   Box,
   Card,
   CardContent,
-  colors, Grid,
-  makeStyles, Typography
+  colors,
+  Grid,
+  makeStyles,
+  Typography
 } from '@material-ui/core';
-import { Cloud } from '@material-ui/icons';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowUp, CloudRain } from 'react-feather';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
+import { useUnitConverters } from 'src/components/UnitConversionProvider';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,70 +33,88 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Budget = ({ className, ...rest }) => {
+function WeatherCardInner({ weather }) {
   const classes = useStyles();
+  console.log(weather);
+  const { temperature, speed } = useUnitConverters();
 
-  const windHeading = 420;
+  const chanceOfRain = weather.weather.rain.chance ? weather.weather.rain.chance : 0;
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <CardContent>
-        <Grid
-          container
-          justify="space-between"
-          spacing={3}
-        >
-          <Grid item>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              variant="h6"
-            >
-              San Francisco, CA, USA
-            </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h3"
-            >
-              Partly Cloudy
-            </Typography>
-          </Grid>
-          <Grid item>
-            <Avatar className={classes.avatar}>
-              <Cloud />
-            </Avatar>
-          </Grid>
+    <>
+      <Grid container justify="space-between" spacing={3}>
+        <Grid item>
+          <Typography color="textSecondary" gutterBottom variant="h6">
+            {weather.location.name}
+          </Typography>
+          <Typography color="textPrimary" variant="h3">
+            {weather.weather.status}
+            ,
+            {' '}
+            {temperature.convert(weather.weather.temperature.temp).toFixed(1)}
+            {temperature.units}
+          </Typography>
         </Grid>
-        <Box
-          mt={2}
-          display="flex"
-          alignItems="center"
-        >
-          <ArrowUp style={{ transform: `rotate(${windHeading}deg)` }} />
-          <Typography
-            className={classes.differenceValue}
-            variant="body2"
-          >
-            5 mph NW
-          </Typography>
-          <CloudRain />
-          <Typography
-            className={classes.differenceValue}
-            variant="body2"
-          >
-            15% chance of rain
-          </Typography>
-        </Box>
+        <Grid item>
+          <Avatar className={classes.avatar} />
+        </Grid>
+      </Grid>
+      <Box mt={2} display="flex" alignItems="center">
+        <ArrowUp style={{ transform: `rotate(${weather.weather.wind.heading}deg)` }} />
+        <Typography className={classes.differenceValue} variant="body2">
+          {speed.convert(weather.weather.wind.speed).toFixed(1)}
+          {' '}
+          {speed.units}
+        </Typography>
+        <CloudRain />
+        <Typography className={classes.differenceValue} variant="body2">
+          {chanceOfRain}
+          % chance of rain
+        </Typography>
+      </Box>
+    </>
+  );
+}
+
+WeatherCardInner.propTypes = {
+  weather: PropTypes.object
+};
+
+const CurrentWeather = ({ className, ...rest }) => {
+  const classes = useStyles();
+  const [weather, setWeather] = useState(null);
+  const [position, setPosition] = useState(null);
+
+  const { api } = useBackendAPI();
+
+  // Fetch weather on mount
+  useEffect(() => {
+    window.navigator.geolocation.getCurrentPosition(setPosition);
+  }, []);
+
+  // Update weather when position is changed
+  useEffect(() => {
+    // Only update weather if there's a position
+    if (!position) return;
+    console.log('Got position', position);
+
+    api.getCurrentWeatherFromLocation(position.coords.latitude, position.coords.longitude)
+      .then((response) => {
+        setWeather(response);
+      });
+  }, [position]);
+
+  return (
+    <Card className={clsx(classes.root, className)} {...rest} style={{ height: 150 }}>
+      <CardContent>
+        {weather ? <WeatherCardInner weather={weather} /> : null}
       </CardContent>
     </Card>
   );
 };
 
-Budget.propTypes = {
+CurrentWeather.propTypes = {
   className: PropTypes.string
 };
 
-export default Budget;
+export default CurrentWeather;
