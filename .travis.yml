@@ -2,6 +2,6 @@ language: node_js
 node_js:
   - node
 install:
-  - pip install -r requirements.txt
+  - npm install -r requirements.txt
 script:
   - npm test
