@@ -14,7 +14,6 @@ import React, { useEffect, useState } from 'react';
 import { ArrowUp, CloudRain } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
-import { usePosition } from 'use-position';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,19 +83,26 @@ WeatherCardInner.propTypes = {
 const CurrentWeather = ({ className, ...rest }) => {
   const classes = useStyles();
   const [weather, setWeather] = useState(null);
-  const { latitude, longitude } = usePosition();
+  const [position, setPosition] = useState(null);
 
   const { api } = useBackendAPI();
 
   // Fetch weather on mount
   useEffect(() => {
-    // Only update weather if there's a position
-    if (!(latitude && latitude)) return;
+    window.navigator.geolocation.getCurrentPosition(setPosition);
+  }, []);
 
-    api.getCurrentWeatherFromLocation(latitude, longitude).then((response) => {
-      setWeather(response);
-    });
-  }, [latitude, longitude]);
+  // Update weather when position is changed
+  useEffect(() => {
+    // Only update weather if there's a position
+    if (!position) return;
+    console.log('Got position', position);
+
+    api.getCurrentWeatherFromLocation(position.coords.latitude, position.coords.longitude)
+      .then((response) => {
+        setWeather(response);
+      });
+  }, [position]);
 
   return (
     <Card className={clsx(classes.root, className)} {...rest} style={{ height: 150 }}>
