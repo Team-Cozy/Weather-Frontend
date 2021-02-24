@@ -16,7 +16,6 @@ import {
   Lock as LockIcon,
   Settings as SettingsIcon,
   User as UserIcon,
-  UserPlus as UserPlusIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
 
@@ -43,14 +42,9 @@ const items = [
     title: 'Settings'
   },
   {
-    href: '/login',
+    href: 'http://127.0.0.1:5000/auth/login',
     icon: LockIcon,
     title: 'Login'
-  },
-  {
-    href: '/register',
-    icon: UserPlusIcon,
-    title: 'Register'
   },
 
 ];
