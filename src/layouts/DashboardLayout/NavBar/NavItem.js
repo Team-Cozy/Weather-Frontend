@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink as RouterLink } from 'react-router-dom';
+/* import { NavLink as RouterLink } from 'react-router-dom'; */
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -58,8 +58,9 @@ const NavItem = ({
       <Button
         activeClassName={classes.active}
         className={classes.button}
-        component={RouterLink}
-        to={href}
+        /* component={RouterLink}
+        #to={href} */
+        href={href}
       >
         {Icon && (
           <Icon
