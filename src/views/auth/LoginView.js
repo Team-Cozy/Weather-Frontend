@@ -99,7 +99,7 @@ const LoginView = () => {
                 <Box my={2}>
                   <Button
                     color="primary"
-                    href="http://127.0.0.1:5000/auth/login"
+                    href="https://127.0.0.1:5000/auth/login"
                     disabled={isSubmitting}
                     fullWidth
                     size="large"
@@ -109,7 +109,7 @@ const LoginView = () => {
                     Sign in now
                   </Button>
                 </Box>
-                <a href="http://127.0.0.1:5000/auth/login" className="button">Link</a>
+                <a href="https://127.0.0.1:5000/auth/login" className="button">Link</a>
                 <Typography
                   color="textSecondary"
                   variant="body1"
