@@ -55,7 +55,6 @@ const NavItem = ({
       {...rest}
     >
       <Button
-        activeClassName={classes.active}
         className={classes.button}
         href={href}
       >
