@@ -3,14 +3,19 @@ import React, { useState, useEffect } from 'react';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { Grid, TextField, Typography } from '@material-ui/core';
+import { useUserLocation } from 'src/components/UserLocationProvider';
+import { CityLocation } from 'src/api/Location';
 
 const filter = createFilterOptions();
 
-export default function FreeSoloCreateOption() {
-  const [value, setValue] = useState(null);
+export default function CitySearch() {
+  const { location, setLocation } = useUserLocation();
+  const value = location instanceof CityLocation ? location.data : null;
+  const setValue = (newValue) => setLocation(new CityLocation(newValue));
+
+  const { api } = useBackendAPI();
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const { api } = useBackendAPI();
 
   useEffect(() => {
     if (!api || inputValue.length < 3) {
@@ -54,7 +59,7 @@ export default function FreeSoloCreateOption() {
       style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="Search for a city..." variant="outlined" />
+        <TextField {...params} label="What city are you in?" variant="outlined" />
       )}
     />
   );

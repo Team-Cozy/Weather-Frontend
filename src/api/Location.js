@@ -6,15 +6,13 @@ export class Location {
 }
 
 export class CityLocation extends Location {
-  constructor(name, country, id) {
+  constructor(data) {
     super();
-    this.name = name;
-    this.country = country;
-    this.cityId = id;
+    this.data = data;
   }
 
   getRequestParams() {
-    return { cityId: this.cityId };
+    return { cityId: this.data.cityId };
   }
 }
 
