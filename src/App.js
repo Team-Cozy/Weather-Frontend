@@ -8,6 +8,7 @@ import theme from 'src/theme';
 import routes from 'src/routes';
 import { BackendAPIProvider } from './components/BackendAPIProvider';
 import { UnitConversionProvider } from './components/UnitConversionProvider';
+import { UserLocationProvider } from './components/UserLocationProvider';
 
 const App = () => {
   const routing = useRoutes(routes);
@@ -15,10 +16,12 @@ const App = () => {
   return (
     <UnitConversionProvider>
       <BackendAPIProvider>
-        <ThemeProvider theme={theme}>
-          <GlobalStyles />
-          {routing}
-        </ThemeProvider>
+        <UserLocationProvider>
+          <ThemeProvider theme={theme}>
+            <GlobalStyles />
+            {routing}
+          </ThemeProvider>
+        </UserLocationProvider>
       </BackendAPIProvider>
     </UnitConversionProvider>
   );
