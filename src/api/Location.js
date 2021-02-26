@@ -12,7 +12,7 @@ export class CityLocation extends Location {
   }
 
   getRequestParams() {
-    return { cityId: this.data.cityId };
+    return { city_id: this.data.id };
   }
 }
 

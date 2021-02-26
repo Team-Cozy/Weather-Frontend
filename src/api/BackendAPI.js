@@ -16,6 +16,7 @@ export default class BackendAPI {
   }
 
   async getCurrentWeatherAt(location) {
+    console.log(location.getRequestParams());
     const response = await this.axios.get('/weather/current', {
       params: location.getRequestParams()
     });
