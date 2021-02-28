@@ -5,7 +5,8 @@ import axios from 'axios';
  */
 export default class BackendAPI {
   constructor(baseURL) {
-    this.axios = axios.create({ baseURL });
+    this.baseURL = baseURL;
+    this.axios = axios.create({ baseURL, withCredentials: true });
   }
 
   async getCurrentWeatherFromLocation(lat, lon) {
@@ -27,4 +28,16 @@ export default class BackendAPI {
     const response = await this.axios.get('/search/cities', { params: { query } });
     return response.data;
   }
+
+  async getCurrentUser() {
+    const response = await this.axios.get('/auth/current_user');
+    return response.data;
+  }
+
+  getLoginURL() {
+    return new URL('/auth/login', this.baseURL);
+  }
+
+  getLogoutURL() {
+    return new URL('/auth/logout', this.baseURL);
 }

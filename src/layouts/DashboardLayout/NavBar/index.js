@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Divider,
   Drawer,
   Hidden,
   List,
-  Typography,
   makeStyles
 } from '@material-ui/core';
 import {
@@ -17,37 +15,9 @@ import {
   Settings as SettingsIcon,
   User as UserIcon,
 } from 'react-feather';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import NavItem from './NavItem';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
-
-const items = [
-  {
-    href: '/app/dashboard',
-    icon: BarChartIcon,
-    title: 'Dashboard'
-  },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Account'
-  },
-  {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
-  },
-  {
-    href: 'http://127.0.0.1:5000/auth/login',
-    icon: LockIcon,
-    title: 'Login'
-  },
-
-];
+import CurrentUserDisplay from './CurrentUserDisplay';
 
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
@@ -57,17 +27,41 @@ const useStyles = makeStyles(() => ({
     width: 256,
     top: 64,
     height: 'calc(100% - 64px)'
-  },
-  avatar: {
-    cursor: 'pointer',
-    width: 64,
-    height: 64
   }
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const { api } = useBackendAPI();
+
+  const items = [
+    {
+      href: '/app/dashboard',
+      icon: BarChartIcon,
+      title: 'Dashboard'
+    },
+    {
+      href: '/app/account',
+      icon: UserIcon,
+      title: 'Account'
+    },
+    {
+      href: '/app/settings',
+      icon: SettingsIcon,
+      title: 'Settings'
+    },
+    {
+      href: api.getLoginURL(),
+      icon: LockIcon,
+      title: 'Login'
+    },
+    {
+      href: api.getLogoutURL(),
+      icon: LockIcon,
+      title: 'Logout'
+    }
+  ];
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -88,25 +82,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         flexDirection="column"
         p={2}
       >
-        <Avatar
-          className={classes.avatar}
-          component={RouterLink}
-          src={user.avatar}
-          to="/app/account"
-        />
-        <Typography
-          className={classes.name}
-          color="textPrimary"
-          variant="h5"
-        >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.jobTitle}
-        </Typography>
+        <CurrentUserDisplay />
       </Box>
       <Divider />
       <Box p={2}>
@@ -158,7 +134,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false
 };
 
