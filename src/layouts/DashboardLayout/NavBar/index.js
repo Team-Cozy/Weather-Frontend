@@ -23,9 +23,12 @@ import NavItem from './NavItem';
 let googleUser = null;
 let user = null;
 
-axios.get('http://localhost:5000/auth/user')
+axios.get('http://localhost:5000/auth/current_user', {
+  withCredentials: true
+})
   .then((res) => {
     googleUser = res.data.user;
+    console.log(res);
   })
   .catch(() => {
     googleUser = null;
@@ -181,7 +184,7 @@ NavBar.propTypes = {
 };
 
 NavBar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false
 };
 
