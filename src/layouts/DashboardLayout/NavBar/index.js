@@ -15,37 +15,9 @@ import {
   Settings as SettingsIcon,
   User as UserIcon,
 } from 'react-feather';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import NavItem from './NavItem';
 import CurrentUserDisplay from './CurrentUserDisplay';
-
-const items = [
-  {
-    href: '/app/dashboard',
-    icon: BarChartIcon,
-    title: 'Dashboard'
-  },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Account'
-  },
-  {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
-  },
-  {
-    href: 'http://127.0.0.1:5000/auth/login',
-    icon: LockIcon,
-    title: 'Login'
-  },
-  {
-    href: 'http://127.0.0.1:5000/auth/logout',
-    icon: LockIcon,
-    title: 'Logout'
-  }
-
-];
 
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
@@ -61,6 +33,35 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const { api } = useBackendAPI();
+
+  const items = [
+    {
+      href: '/app/dashboard',
+      icon: BarChartIcon,
+      title: 'Dashboard'
+    },
+    {
+      href: '/app/account',
+      icon: UserIcon,
+      title: 'Account'
+    },
+    {
+      href: '/app/settings',
+      icon: SettingsIcon,
+      title: 'Settings'
+    },
+    {
+      href: api.getLoginURL(),
+      icon: LockIcon,
+      title: 'Login'
+    },
+    {
+      href: api.getLogoutURL(),
+      icon: LockIcon,
+      title: 'Logout'
+    }
+  ];
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
