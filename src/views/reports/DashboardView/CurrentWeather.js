@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -15,7 +14,7 @@ import { ArrowUp, CloudRain } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
 import { useUserLocation } from 'src/components/UserLocationProvider';
-import CitySearch from '../../../components/CitySearch';
+import UserLocationForm from '../../../components/UserLocationForm';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,9 +55,6 @@ function WeatherCardInner({ weather }) {
             {temperature.convert(weather.weather.temperature.temp).toFixed(1)}
             {temperature.units}
           </Typography>
-        </Grid>
-        <Grid item>
-          <Avatar className={classes.avatar} />
         </Grid>
       </Grid>
       <Box mt={2} display="flex" alignItems="center">
@@ -103,7 +99,7 @@ const CurrentWeather = ({ className, ...rest }) => {
 
   let cardInner = null;
   if (location == null) {
-    cardInner = <CitySearch />;
+    cardInner = <UserLocationForm />;
   }
   if (weather != null) {
     cardInner = <WeatherCardInner weather={weather} />;

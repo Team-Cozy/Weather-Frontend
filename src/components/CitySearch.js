@@ -28,14 +28,14 @@ export default function CitySearch() {
   return (
     <Autocomplete
       value={value}
-      onChange={(event, newValue) => {
+      onChange={(_event, newValue) => {
         setValue(newValue);
       }}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
         return filtered;
       }}
-      onInputChange={(event, newInputValue) => {
+      onInputChange={(_event, newInputValue) => {
         setInputValue(newInputValue);
       }}
       selectOnFocus
