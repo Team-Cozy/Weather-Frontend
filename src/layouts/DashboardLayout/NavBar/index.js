@@ -1,15 +1,12 @@
 import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import {
-  Avatar,
   Box,
   Divider,
   Drawer,
   Hidden,
   List,
-  Typography,
   makeStyles
 } from '@material-ui/core';
 import {
@@ -19,32 +16,7 @@ import {
   User as UserIcon,
 } from 'react-feather';
 import NavItem from './NavItem';
-
-let googleUser = null;
-let user = null;
-
-axios.get('http://localhost:5000/auth/current_user', {
-  withCredentials: true
-})
-  .then((res) => {
-    googleUser = res.data.user;
-    console.log(res);
-  })
-  .catch(() => {
-    googleUser = null;
-  });
-
-if (googleUser != null) {
-  user = {
-    avatar: googleUser.profile_pic,
-    name: googleUser.name
-  };
-} else {
-  user = {
-    avatar: '/public/static/images/avatars/no_user.png',
-    name: 'Please login!'
-  };
-}
+import CurrentUserDisplay from './CurrentUserDisplay';
 
 const items = [
   {
@@ -83,11 +55,6 @@ const useStyles = makeStyles(() => ({
     width: 256,
     top: 64,
     height: 'calc(100% - 64px)'
-  },
-  avatar: {
-    cursor: 'pointer',
-    width: 64,
-    height: 64
   }
 }));
 
@@ -114,25 +81,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         flexDirection="column"
         p={2}
       >
-        <Avatar
-          className={classes.avatar}
-          component={RouterLink}
-          src={user.avatar}
-          to="/app/account"
-        />
-        <Typography
-          className={classes.name}
-          color="textPrimary"
-          variant="h5"
-        >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.jobTitle}
-        </Typography>
+        <CurrentUserDisplay />
       </Box>
       <Divider />
       <Box p={2}>
