@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import {
   Avatar,
   Box,
@@ -19,11 +20,28 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
+let googleUser = null;
+let user = null;
+
+axios.get('http://localhost:5000/auth/user')
+  .then((res) => {
+    googleUser = res.data.user;
+  })
+  .catch(() => {
+    googleUser = null;
+  });
+
+if (googleUser != null) {
+  user = {
+    avatar: googleUser.profile_pic,
+    name: googleUser.name
+  };
+} else {
+  user = {
+    avatar: '/public/static/images/avatars/no_user.png',
+    name: 'Please login!'
+  };
+}
 
 const items = [
   {
@@ -46,6 +64,11 @@ const items = [
     icon: LockIcon,
     title: 'Login'
   },
+  {
+    href: 'http://127.0.0.1:5000/auth/logout',
+    icon: LockIcon,
+    title: 'Logout'
+  }
 
 ];
 
