@@ -14,4 +14,17 @@ export default class BackendAPI {
     });
     return response.data;
   }
+
+  async getCurrentWeatherAt(location) {
+    console.log(location.getRequestParams());
+    const response = await this.axios.get('/weather/current', {
+      params: location.getRequestParams()
+    });
+    return response.data;
+  }
+
+  async searchForCity(query) {
+    const response = await this.axios.get('/search/cities', { params: { query } });
+    return response.data;
+  }
 }

@@ -17,6 +17,7 @@
   "rules": {
     "no-underscore-dangle": "off",
     "arrow-body-style": "off",
+    "max-classes-per-file": "off",
     "comma-dangle": "off",
     "import/no-unresolved": "off",
     "jsx-a11y/anchor-is-valid": "off",
