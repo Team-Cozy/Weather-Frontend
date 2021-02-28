@@ -16,6 +16,19 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async getCurrentWeatherAt(location) {
+    console.log(location.getRequestParams());
+    const response = await this.axios.get('/weather/current', {
+      params: location.getRequestParams()
+    });
+    return response.data;
+  }
+
+  async searchForCity(query) {
+    const response = await this.axios.get('/search/cities', { params: { query } });
+    return response.data;
+  }
+
   async getCurrentUser() {
     const response = await this.axios.get('/auth/current_user');
     return response.data;
@@ -27,5 +40,4 @@ export default class BackendAPI {
 
   getLogoutURL() {
     return new URL('/auth/logout', this.baseURL);
-  }
 }

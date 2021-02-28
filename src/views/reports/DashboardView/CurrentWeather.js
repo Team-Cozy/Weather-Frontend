@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -14,6 +13,8 @@ import React, { useEffect, useState } from 'react';
 import { ArrowUp, CloudRain } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
+import { useUserLocation } from 'src/components/UserLocationProvider';
+import UserLocationForm from '../../../components/UserLocationForm';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,9 +56,6 @@ function WeatherCardInner({ weather }) {
             {temperature.units}
           </Typography>
         </Grid>
-        <Grid item>
-          <Avatar className={classes.avatar} />
-        </Grid>
       </Grid>
       <Box mt={2} display="flex" alignItems="center">
         <ArrowUp style={{ transform: `rotate(${weather.weather.wind.heading}deg)` }} />
@@ -83,31 +81,34 @@ WeatherCardInner.propTypes = {
 const CurrentWeather = ({ className, ...rest }) => {
   const classes = useStyles();
   const [weather, setWeather] = useState(null);
-  const [position, setPosition] = useState(null);
+  const { location } = useUserLocation();
 
   const { api } = useBackendAPI();
-
-  // Fetch weather on mount
-  useEffect(() => {
-    window.navigator.geolocation.getCurrentPosition(setPosition);
-  }, []);
 
   // Update weather when position is changed
   useEffect(() => {
     // Only update weather if there's a position
-    if (!position) return;
-    console.log('Got position', position);
+    if (location == null) return;
+    console.log('Got position', location);
 
-    api.getCurrentWeatherFromLocation(position.coords.latitude, position.coords.longitude)
+    api.getCurrentWeatherAt(location)
       .then((response) => {
         setWeather(response);
       });
-  }, [position]);
+  }, [location]);
+
+  let cardInner = null;
+  if (location == null) {
+    cardInner = <UserLocationForm />;
+  }
+  if (weather != null) {
+    cardInner = <WeatherCardInner weather={weather} />;
+  }
 
   return (
     <Card className={clsx(classes.root, className)} {...rest} style={{ height: 150 }}>
       <CardContent>
-        {weather ? <WeatherCardInner weather={weather} /> : null}
+        {cardInner}
       </CardContent>
     </Card>
   );
