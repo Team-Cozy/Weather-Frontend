@@ -35,9 +35,10 @@ export default class BackendAPI {
   }
 
   getLoginURL() {
-    return new URL('/auth/login', this.baseURL);
+    return new URL('/auth/login', this.baseURL).toString();
   }
 
   getLogoutURL() {
-    return new URL('/auth/logout', this.baseURL);
+    return new URL('/auth/logout', this.baseURL).toString();
+  }
 }
