@@ -34,6 +34,24 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async getProfiles(){
+    const response = await this.axios.get('/profiles');
+    return response.data;
+  }
+  async getProfileByID(){
+    const response = await this.axios.get(`/profiles/${index}`)
+    return response.data;
+  }
+  async getOutfit(index){
+    const response = await this.axios.get(`/profiles/${index}/outfit`);
+    return response.data;
+  }
+  
+  async getDefaultOutfit(){
+    const response = await this.axios.get('/profiles/defaultoutfit');
+    return response.data;
+  }
+
   getLoginURL() {
     return new URL('/auth/login', this.baseURL).toString();
   }
