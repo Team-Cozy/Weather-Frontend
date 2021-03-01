@@ -6,7 +6,6 @@ import AccountView from 'src/views/account/AccountView';
 import DashboardView from 'src/views/reports/DashboardView';
 import NotFoundView from 'src/views/errors/NotFoundView';
 import RegisterView from 'src/views/auth/RegisterView';
-import SettingsView from 'src/views/settings/SettingsView';
 
 const routes = [
   {
@@ -15,7 +14,6 @@ const routes = [
     children: [
       { path: 'account', element: <AccountView /> },
       { path: 'dashboard', element: <DashboardView /> },
-      { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

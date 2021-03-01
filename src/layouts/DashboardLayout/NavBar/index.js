@@ -12,7 +12,6 @@ import {
 import {
   BarChart as BarChartIcon,
   Lock as LockIcon,
-  Settings as SettingsIcon,
   User as UserIcon,
 } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
@@ -45,11 +44,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       href: '/app/account',
       icon: UserIcon,
       title: 'Account'
-    },
-    {
-      href: '/app/settings',
-      icon: SettingsIcon,
-      title: 'Settings'
     },
     {
       href: api.getLoginURL(),
