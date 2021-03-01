@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { v4 as uuid } from 'uuid';
-import moment from 'moment';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
+import { useUserLocation } from 'src/components/UserLocationProvider';
 import {
   Box,
   Button,
@@ -19,39 +19,6 @@ import {
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
-const data = [
-  {
-    id: uuid(),
-    name: 'Dropbox',
-    imageUrl: '/static/images/products/product_1.png',
-    updatedAt: moment().subtract(2, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Medium Corporation',
-    imageUrl: '/static/images/products/product_2.png',
-    updatedAt: moment().subtract(2, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Slack',
-    imageUrl: '/static/images/products/product_3.png',
-    updatedAt: moment().subtract(3, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'Lyft',
-    imageUrl: '/static/images/products/product_4.png',
-    updatedAt: moment().subtract(5, 'hours')
-  },
-  {
-    id: uuid(),
-    name: 'GitHub',
-    imageUrl: '/static/images/products/product_5.png',
-    updatedAt: moment().subtract(9, 'hours')
-  }
-];
-
 const useStyles = makeStyles(({
   root: {
     height: '100%'
@@ -62,9 +29,31 @@ const useStyles = makeStyles(({
   }
 }));
 
-const LatestProducts = ({ className, ...rest }) => {
+const Outfit = ({ className, ...rest }) => {
   const classes = useStyles();
-  const [products] = useState(data);
+  const [outfit, setOutfit] = useState(null);
+  const { location } = useUserLocation();
+
+  const { api } = useBackendAPI();
+
+  // Update outfit when position is changed
+  useEffect(() => {
+    // Only update outfit if there's a position
+    if (location == null) return;
+    console.log('Got position', location);
+
+    api.getOutfit(location)
+      .then((response) => {
+        console.log(response);
+        setOutfit(response);
+      });
+  }, [location]);
+
+  if (outfit == null) {
+    return 'You must enter location to get an outfit suggestion';
+  }
+
+  const { pieces } = outfit;
 
   return (
     <Card
@@ -72,26 +61,24 @@ const LatestProducts = ({ className, ...rest }) => {
       {...rest}
     >
       <CardHeader
-        subtitle={`${products.length} in total`}
         title="Outfit Suggestion!"
       />
       <Divider />
       <List>
-        {products.map((product, i) => (
+        {Object.entries(pieces).map(([, piece], i) => (
           <ListItem
-            divider={i < products.length - 1}
-            key={product.id}
+            divider={i < pieces.length - 1}
+            key={piece.id}
           >
             <ListItemAvatar>
               <img
-                alt="Product"
+                alt={piece.name}
                 className={classes.image}
-                src={product.imageUrl}
+                src={piece.image}
               />
             </ListItemAvatar>
             <ListItemText
-              primary={product.name}
-              secondary={`Updated ${product.updatedAt.fromNow()}`}
+              primary={piece.name}
             />
             <IconButton
               edge="end"
@@ -121,8 +108,8 @@ const LatestProducts = ({ className, ...rest }) => {
   );
 };
 
-LatestProducts.propTypes = {
+Outfit.propTypes = {
   className: PropTypes.string
 };
 
-export default LatestProducts;
+export default Outfit;

@@ -17,7 +17,6 @@ export default class BackendAPI {
   }
 
   async getCurrentWeatherAt(location) {
-    console.log(location.getRequestParams());
     const response = await this.axios.get('/weather/current', {
       params: location.getRequestParams()
     });
@@ -31,6 +30,14 @@ export default class BackendAPI {
 
   async getCurrentUser() {
     const response = await this.axios.get('/auth/current_user');
+    return response.data;
+  }
+
+  async getOutfit(location) {
+    /* assume we only have one profile (general) at index 0 -- multiple profiles not implemented */
+    const response = await this.axios.get('/profiles/0/outfit', {
+      params: location.getRequestParams()
+    });
     return response.data;
   }
 
