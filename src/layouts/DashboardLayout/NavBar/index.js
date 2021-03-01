@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -33,6 +33,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
   const { api } = useBackendAPI();
+  const [user, setUser] = useState({ anonymous: true });
+
+  useEffect(
+    () => {
+      api.getCurrentUser().then(setUser);
+    }, [api]
+  );
 
   const items = [
     {
@@ -46,14 +53,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       title: 'Account'
     },
     {
-      href: api.getLoginURL(),
+      href: user.anonymous === true ? api.getLoginURL() : api.getLogoutURL(),
       icon: LockIcon,
-      title: 'Login'
-    },
-    {
-      href: api.getLogoutURL(),
-      icon: LockIcon,
-      title: 'Logout'
+      title: user.anonymous === true ? 'Login' : 'Logout'
     }
   ];
 
