@@ -1,6 +1,7 @@
 import {
   Avatar,
   Typography,
+  CircularProgress,
   makeStyles
 } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ const useStyles = makeStyles(() => ({
 
 export default function CurrentUserDisplay() {
   const classes = useStyles();
-  const [user, setUser] = useState({ anonymous: true });
+  const [user, setUser] = useState(null);
   const { api } = useBackendAPI();
 
   useEffect(
@@ -26,18 +27,22 @@ export default function CurrentUserDisplay() {
   );
 
   return (
-    <>
-      <Avatar
-        className={classes.avatar}
-        src={user.anonymous ? '/static/images/avatars/no_user.png' : user.profilePic}
-      />
-      <Typography
-        className={classes.name}
-        color="textPrimary"
-        variant="h5"
-      >
-        {user.anonymous ? 'Not logged in' : user.name}
-      </Typography>
-    </>
+    user
+      ? (
+        <>
+          <Avatar
+            className={classes.avatar}
+            src={user.profilePic}
+          />
+          <Typography
+            className={classes.name}
+            color="textPrimary"
+            variant="h5"
+          >
+            {user.name}
+          </Typography>
+        </>
+      )
+      : <CircularProgress />
   );
 }
