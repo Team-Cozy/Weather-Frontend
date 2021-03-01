@@ -34,6 +34,12 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async getOutfit() {
+    /* assume we only have one profile (general) at index 0 -- multiple profiles not implemented */
+    const response = await this.axios.get('/profiles/0/outfit');
+    return response.data;
+  }
+
   getLoginURL() {
     return new URL('/auth/login', this.baseURL).toString();
   }

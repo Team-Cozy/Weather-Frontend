@@ -6,7 +6,7 @@ import {
 import React from 'react';
 import Page from 'src/components/Page';
 import CurrentWeather from './CurrentWeather';
-import LatestProducts from './LatestProducts';
+import Outfit from './Outfit';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +40,7 @@ const Dashboard = () => {
             item
             xs={12}
           >
-            <LatestProducts />
+            <Outfit />
           </Grid>
         </Grid>
       </Container>
