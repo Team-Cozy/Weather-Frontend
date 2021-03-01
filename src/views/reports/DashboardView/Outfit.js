@@ -42,7 +42,7 @@ const Outfit = ({ className, ...rest }) => {
     if (location == null) return;
     console.log('Got position', location);
 
-    api.getOutfit()
+    api.getOutfit(location)
       .then((response) => {
         setOutfit(response);
       });
