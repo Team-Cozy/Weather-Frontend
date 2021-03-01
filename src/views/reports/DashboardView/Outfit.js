@@ -44,6 +44,7 @@ const Outfit = ({ className, ...rest }) => {
 
     api.getOutfit(location)
       .then((response) => {
+        console.log(response);
         setOutfit(response);
       });
   }, [location]);
@@ -51,6 +52,8 @@ const Outfit = ({ className, ...rest }) => {
   if (outfit == null) {
     return 'You must enter location to get an outfit suggestion';
   }
+
+  const { pieces } = outfit;
 
   return (
     <Card
@@ -62,27 +65,29 @@ const Outfit = ({ className, ...rest }) => {
       />
       <Divider />
       <List>
-        <ListItem
-          divider
-        >
-          <ListItemAvatar>
-            <img
-              alt="Product"
-              className={classes.image}
-              src={outfit.pieces.hat.image}
-            />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Hat"
-            secondary={outfit.pieces.hat.name}
-          />
-          <IconButton
-            edge="end"
-            size="small"
+        {Object.entries(pieces).map(([, piece], i) => (
+          <ListItem
+            divider={i < pieces.length - 1}
+            key={piece.id}
           >
-            <MoreVertIcon />
-          </IconButton>
-        </ListItem>
+            <ListItemAvatar>
+              <img
+                alt={piece.name}
+                className={classes.image}
+                src={piece.image}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={piece.name}
+            />
+            <IconButton
+              edge="end"
+              size="small"
+            >
+              <MoreVertIcon />
+            </IconButton>
+          </ListItem>
+        ))}
       </List>
       <Divider />
       <Box
