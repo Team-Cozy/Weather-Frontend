@@ -41,6 +41,11 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async updatePreferences(preferences) {
+    const response = await this.axios.post('/preferences', preferences);
+    return response.data;
+  }
+
   getLoginURL() {
     return new URL('/auth/login', this.baseURL).toString();
   }

@@ -66,6 +66,10 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
+  console.log(items);
+  console.log(user);
+  console.log(user.anonymous);
+
   const content = (
     <Box
       height="100%"
