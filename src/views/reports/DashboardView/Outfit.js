@@ -1,8 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { useBackendAPI } from 'src/components/BackendAPIProvider';
-import { useUserLocation } from 'src/components/UserLocationProvider';
 import {
   Box,
   Button,
@@ -19,13 +14,19 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  makeStyles
+  makeStyles,
+  Tooltip
 } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Create } from '@material-ui/icons';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
-import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
+import { useUserLocation } from 'src/components/UserLocationProvider';
 import { mapSliderValues } from '../../../api/utils';
+import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
 
 const useStyles = makeStyles(({
   root: {
@@ -128,6 +129,15 @@ function ClothingPiece({ piece }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleClose = () => setDialogOpen(false);
+  const editButton = (
+    <IconButton
+      edge="end"
+      size="small"
+      onClick={() => { setDialogOpen(true); }}
+    >
+      <Create title="Edit" />
+    </IconButton>
+  );
 
   return (
     <>
@@ -141,13 +151,9 @@ function ClothingPiece({ piece }) {
       <ListItemText
         primary={piece.name}
       />
-      <IconButton
-        edge="end"
-        size="small"
-        onClick={() => { setDialogOpen(true); }}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      <Tooltip title="Log in to set your preferences!">
+        {editButton}
+      </Tooltip>
       <SliderEditDialog clothingType={piece.type} open={dialogOpen} handleClose={handleClose} />
     </>
   );
