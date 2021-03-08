@@ -23,7 +23,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
-import { useUnitConverters } from 'src/components/UnitConversionProvider';
+import { getUnitConverterByKey, useUnitConverters } from 'src/components/UnitConversionProvider';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { mapSliderValues } from '../../../api/utils';
 import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
@@ -41,9 +41,10 @@ const useStyles = makeStyles(({
 
 function SliderEditDialog({ open, handleClose, clothingType }) {
   const { api } = useBackendAPI();
-  const { temperature } = useUnitConverters();
   const [saving, setSaving] = useState(false);
   const [slider, setSlider] = useState(null);
+  const converters = useUnitConverters();
+  const converter = slider == null ? null : getUnitConverterByKey(converters, slider.parameter);
 
   const profileIndex = 0;
 
@@ -80,9 +81,9 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
     })();
   }, [saving]);
 
-  const getConvertedSlider = () => mapSliderValues(slider, temperature.convert);
+  const getConvertedSlider = () => mapSliderValues(slider, converter.convert);
   const setConvertedSlider = (newSlider) => {
-    setSlider(mapSliderValues(newSlider, temperature.convertBack));
+    setSlider(mapSliderValues(newSlider, converter.convertBack));
   };
 
   return (
@@ -100,7 +101,7 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
           : (
             <>
               <ZoneAdjustmentSlider
-                domain={temperature.sliderDomain}
+                domain={converter.sliderDomain}
                 preference={getConvertedSlider()}
                 setPreference={setConvertedSlider}
               />

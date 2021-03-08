@@ -65,3 +65,16 @@ UnitConversionProvider.propTypes = {
 export function useUnitConverters() {
   return useContext(UnitConversionContext);
 }
+
+export function getUnitConverterByKey(converters, sliderKey) {
+  switch (sliderKey) {
+    case 'temp':
+      return converters.temperature;
+    case 'uv':
+      return converters.uv;
+    case 'speed':
+      return converters.speed;
+    default:
+      throw Error(`Unsupported key ${sliderKey}`);
+  }
+}
