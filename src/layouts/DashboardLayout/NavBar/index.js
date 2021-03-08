@@ -48,9 +48,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       title: 'Dashboard'
     },
     {
-      href: '/app/account',
+      href: '/register',
       icon: UserIcon,
-      title: 'Account'
+      title: 'Preferences'
     },
     {
       href: user.anonymous === true ? api.getLoginURL() : api.getLogoutURL(),

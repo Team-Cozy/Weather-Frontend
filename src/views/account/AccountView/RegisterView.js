@@ -40,7 +40,6 @@ const RegisterView = () => {
   const handleSubmit = () => {
     console.log(preferences);
     api.updatePreferences(preferences);
-    console.log('current user', api.getCurrentUser());
     navigate('/app/dashboard');
   };
 
