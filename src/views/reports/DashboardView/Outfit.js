@@ -39,7 +39,9 @@ const useStyles = makeStyles(({
   }
 }));
 
-function SliderEditDialog({ open, handleClose, clothingType }) {
+function SliderEditDialog({
+  open, handleClose, clothingType, onUpdate = () => { }
+}) {
   const { api } = useBackendAPI();
   const [saving, setSaving] = useState(false);
   const [slider, setSlider] = useState(null);
@@ -78,6 +80,8 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
       // Close this modal
       setSaving(false);
       handleClose();
+      console.log('updated');
+      onUpdate();
     })();
   }, [saving]);
 
@@ -123,10 +127,14 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
 SliderEditDialog.propTypes = {
   clothingType: PropTypes.string,
   handleClose: PropTypes.func,
+  onUpdate: PropTypes.func,
   open: PropTypes.bool
 };
 
-function ClothingPiece({ piece }) {
+function ClothingPiece({
+  piece,
+  onUpdate = () => { }
+}) {
   const classes = useStyles();
   const [dialogOpen, setDialogOpen] = useState(false);
   const { user } = useLoggedInUser();
@@ -168,13 +176,19 @@ function ClothingPiece({ piece }) {
         {editButton}
       </Tooltip>
 
-      <SliderEditDialog clothingType={piece.type} open={dialogOpen} handleClose={handleClose} />
+      <SliderEditDialog
+        clothingType={piece.type}
+        open={dialogOpen}
+        handleClose={handleClose}
+        onUpdate={onUpdate}
+      />
     </>
   );
 }
 
 ClothingPiece.propTypes = {
   piece: PropTypes.object,
+  onUpdate: PropTypes.func,
 };
 
 const Outfit = ({ className, ...rest }) => {
@@ -184,20 +198,27 @@ const Outfit = ({ className, ...rest }) => {
 
   const { api } = useBackendAPI();
 
+  const onUpdate = () => {
+    console.log('updated');
+    setOutfit(null);
+  };
+
   // Update outfit when position is changed
   useEffect(() => {
-    // Only update outfit if there's a position
-    if (location == null) return;
-    console.log('Got position', location);
+    // Only update outfit if we don't have an outfit yet
+    if (outfit != null) return;
 
+    // Only update outfit if we have a location
+    if (location == null) return;
+
+    console.log('fetching outfit');
     api.getOutfit(location)
       .then((response) => {
-        console.log(response);
         setOutfit(response);
       });
-  }, [location]);
+  }, [api, location, outfit]);
 
-  if (outfit == null) {
+  if (location == null) {
     return 'You must enter location to get an outfit suggestion';
   }
 
@@ -218,7 +239,7 @@ const Outfit = ({ className, ...rest }) => {
             divider={i < pieces.length - 1}
             key={piece.id}
           >
-            <ClothingPiece piece={piece} />
+            <ClothingPiece onUpdate={onUpdate} piece={piece} />
           </ListItem>
         ))}
       </List>
