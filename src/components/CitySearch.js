@@ -18,7 +18,7 @@ export default function CitySearch() {
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    if (!api || inputValue.length < 3) {
+    if (!api || inputValue.length < 2) {
       setSuggestions([]);
     } else {
       api.searchForCity(inputValue).then(setSuggestions);
@@ -40,6 +40,7 @@ export default function CitySearch() {
       }}
       selectOnFocus
       handleHomeEndKeys
+      clearOnBlur
       id="free-solo-with-text-demo"
       options={suggestions}
       getOptionLabel={(option) => {
