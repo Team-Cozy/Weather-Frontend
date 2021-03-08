@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Card,
   CardHeader,
@@ -18,7 +17,6 @@ import {
   Tooltip
 } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -243,21 +241,6 @@ const Outfit = ({ className, ...rest }) => {
           </ListItem>
         ))}
       </List>
-      <Divider />
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        p={2}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
-      </Box>
     </Card>
   );
 };
