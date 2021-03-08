@@ -192,15 +192,17 @@ export default function ZoneAdjustmentSlider({
   preference,
   setPreference = () => { },
 }) {
-  const values = preference.pieces.slice(0, preference.pieces.length - 1).map((c) => c.min);
+  const lastIndex = preference.pieces.length - 1;
+  const nodes = preference.pieces.slice(0, lastIndex);
+  const values = nodes.map((c) => c.min);
 
   const setValues = (newValues) => {
     const pieces = [
-      preference.pieces[0],
-      ...preference.pieces.slice(1).map((c, i) => ({
+      ...nodes.map((c, i) => ({
         ...c,
-        minTemp: newValues[i],
+        min: newValues[i],
       })),
+      preference.pieces[lastIndex],
     ];
     setPreference({
       ...preference,

@@ -25,6 +25,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
 import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
+import { mapSliderValues } from '../../../api/utils';
 
 const useStyles = makeStyles(({
   root: {
@@ -52,15 +53,7 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
     api.getProfile(profileIndex).then((profile) => {
       const origSlider = profile.sliders[clothingType];
       console.log('Got slider', profile);
-      setSlider({
-        ...origSlider,
-        pieces: origSlider.pieces.map((node) => (
-          {
-            ...node,
-            min: temperature.convert(node.min)
-          }
-        ))
-      });
+      setSlider(origSlider);
     });
   }, [slider, open]);
 
@@ -74,6 +67,7 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
 
       // Patch the slider
       profile.sliders[clothingType] = slider;
+      console.log(profile);
 
       // Send the data back to the backend
       await api.updateProfile(profileIndex, profile);
@@ -83,6 +77,11 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
       handleClose();
     })();
   }, [saving]);
+
+  const getConvertedSlider = () => mapSliderValues(slider, temperature.convert);
+  const setConvertedSlider = (newSlider) => {
+    setSlider(mapSliderValues(newSlider, temperature.convertBack));
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -100,8 +99,8 @@ function SliderEditDialog({ open, handleClose, clothingType }) {
             <>
               <ZoneAdjustmentSlider
                 domain={temperature.sliderDomain}
-                preference={slider}
-                setPreference={setSlider}
+                preference={getConvertedSlider()}
+                setPreference={setConvertedSlider}
               />
             </>
           )}
