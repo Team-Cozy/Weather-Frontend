@@ -1,6 +1,7 @@
 import {
   Button,
   Card,
+  CardContent,
   CardHeader,
   CircularProgress,
   Dialog,
@@ -14,7 +15,8 @@ import {
   ListItemAvatar,
   ListItemText,
   makeStyles,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@material-ui/core';
 import { Create } from '@material-ui/icons';
 import clsx from 'clsx';
@@ -24,8 +26,8 @@ import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { getUnitConverterByKey, useUnitConverters } from 'src/components/UnitConversionProvider';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { mapSliderValues } from '../../../api/utils';
-import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
 import { useLoggedInUser } from '../../../components/UserProvider';
+import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
 
 const useStyles = makeStyles(({
   root: {
@@ -189,7 +191,29 @@ ClothingPiece.propTypes = {
   onUpdate: PropTypes.func,
 };
 
-const Outfit = ({ className, ...rest }) => {
+function Outfit({ outfit, onUpdate }) {
+  const { pieces } = outfit;
+
+  return (
+    <List>
+      {Object.entries(pieces).map(([, piece], i) => (
+        <ListItem
+          divider={i < pieces.length - 1}
+          key={piece.id}
+        >
+          <ClothingPiece onUpdate={onUpdate} piece={piece} />
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+
+Outfit.propTypes = {
+  outfit: PropTypes.object,
+  onUpdate: PropTypes.func
+};
+
+function OutfitCard({ className, ...rest }) {
   const classes = useStyles();
   const [outfit, setOutfit] = useState(null);
   const { location } = useUserLocation();
@@ -216,11 +240,24 @@ const Outfit = ({ className, ...rest }) => {
       });
   }, [api, location, outfit]);
 
+  let content;
   if (location == null) {
-    return 'You must enter location to get an outfit suggestion';
+    content = (
+      <CardContent>
+        <Typography>
+          Please choose a location first.
+        </Typography>
+      </CardContent>
+    );
+  } else if (outfit == null) {
+    content = (
+      <CardContent>
+        <CircularProgress />
+      </CardContent>
+    );
+  } else {
+    content = <Outfit outfit={outfit} onUpdate={onUpdate} />;
   }
-
-  const { pieces } = outfit;
 
   return (
     <Card
@@ -231,22 +268,13 @@ const Outfit = ({ className, ...rest }) => {
         title="Outfit Suggestion!"
       />
       <Divider />
-      <List>
-        {Object.entries(pieces).map(([, piece], i) => (
-          <ListItem
-            divider={i < pieces.length - 1}
-            key={piece.id}
-          >
-            <ClothingPiece onUpdate={onUpdate} piece={piece} />
-          </ListItem>
-        ))}
-      </List>
+      {content}
     </Card>
   );
-};
+}
 
-Outfit.propTypes = {
+OutfitCard.propTypes = {
   className: PropTypes.string
 };
 
-export default Outfit;
+export default OutfitCard;
