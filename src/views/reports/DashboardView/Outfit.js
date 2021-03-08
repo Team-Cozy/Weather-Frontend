@@ -23,12 +23,12 @@ const useStyles = makeStyles({
 });
 
 function Outfit({ outfit, onUpdate }) {
-  const { pieces } = outfit;
+  const pieces = Object.entries(outfit.pieces);
 
   return (
     <List>
-      {Object.entries(pieces).map(([, piece], i) => (
-        <ListItem divider={i < pieces.length - 1} key={piece.id}>
+      {pieces.map(([type, piece], i) => (
+        <ListItem divider={i < pieces.length - 1} key={type}>
           <ClothingPiece onUpdate={onUpdate} piece={piece} />
         </ListItem>
       ))}

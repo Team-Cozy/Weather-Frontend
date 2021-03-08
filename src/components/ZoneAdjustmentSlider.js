@@ -260,7 +260,7 @@ export default function ZoneAdjustmentSlider({
                   target={target}
                   getTrackProps={getTrackProps}
                 >
-                  {piece.piece.name}
+                  <>{piece.piece.name}</>
                 </Track>
               );
             })}
