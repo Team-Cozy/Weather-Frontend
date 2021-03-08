@@ -24,24 +24,24 @@ const RegisterView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const { api } = useBackendAPI();
-  const [preferences, setPreferences] = useState({ gets_cold: 5, prefers_hot: 5, gets_burnt: 5 });
+  const [preferences, setPreferences] = useState({ gets_cold: 5, likes_hot: 5, gets_burnt: 5 });
 
   const handleChange = (event, name) => {
     const { ariaValueNow } = event.target;
-    const value = parseInt(ariaValueNow, 10);
 
-    setPreferences({
-      ...preferences,
-      [name]: value,
-    });
-    console.log(preferences);
+    if (ariaValueNow != null) {
+      setPreferences({
+        ...preferences,
+        [name]: parseInt(ariaValueNow, 10),
+      });
+    }
   };
 
   const handleSubmit = () => {
     console.log(preferences);
     api.updatePreferences(preferences);
-    console.log(api.getCurrentUser());
-    navigate('/app/dashboard', { replace: true });
+    console.log('current user', api.getCurrentUser());
+    navigate('/app/dashboard');
   };
 
   return (
@@ -82,6 +82,8 @@ const RegisterView = () => {
               marks
               min={1}
               max={10}
+              aria-valuemin={1}
+              aria-valuemax={10}
               onChange={(e) => handleChange(e, 'gets_cold')}
             />
             <Typography id="likes_hot" gutterBottom>
@@ -94,6 +96,8 @@ const RegisterView = () => {
               marks
               min={1}
               max={10}
+              aria-valuemin={1}
+              aria-valuemax={10}
               onChange={(e) => handleChange(e, 'likes_hot')}
             />
             <Typography id="gets_burnt" gutterBottom>
@@ -106,6 +110,8 @@ const RegisterView = () => {
               marks
               min={1}
               max={10}
+              aria-valuemin={1}
+              aria-valuemax={10}
               onChange={(e) => handleChange(e, 'gets_burnt')}
             />
             <Box my={2}>
