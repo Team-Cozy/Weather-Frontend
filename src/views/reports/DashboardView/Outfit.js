@@ -39,7 +39,7 @@ const Outfit = ({ className, ...rest }) => {
   // Update outfit when position is changed
   useEffect(() => {
     // Only update outfit if there's a position
-    if (location == null) return;
+    if (location == null || location.data == null) return;
     console.log('Got position', location);
 
     api.getOutfit(location)
@@ -68,7 +68,7 @@ const Outfit = ({ className, ...rest }) => {
         {Object.entries(pieces).map(([, piece], i) => (
           <ListItem
             divider={i < pieces.length - 1}
-            key={piece.id}
+            key={piece.type}
           >
             <ListItemAvatar>
               <img

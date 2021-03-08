@@ -88,7 +88,7 @@ const CurrentWeather = ({ className, ...rest }) => {
   // Update weather when position is changed
   useEffect(() => {
     // Only update weather if there's a position
-    if (location == null) return;
+    if (location == null || location.data == null) return;
     console.log('Got position', location);
 
     api.getCurrentWeatherAt(location)
@@ -97,18 +97,18 @@ const CurrentWeather = ({ className, ...rest }) => {
       });
   }, [location]);
 
-  let cardInner = null;
-  if (location == null) {
-    cardInner = <UserLocationForm />;
-  }
-  if (weather != null) {
-    cardInner = <WeatherCardInner weather={weather} />;
+  let style = null;
+  if (weather == null) {
+    style = { height: 150 };
+  } else {
+    style = { height: 250 };
   }
 
   return (
-    <Card className={clsx(classes.root, className)} {...rest} style={{ height: 150 }}>
+    <Card className={clsx(classes.root, className)} {...rest} style={style}>
       <CardContent>
-        {cardInner}
+        <UserLocationForm />
+        {weather != null ? <WeatherCardInner weather={weather} /> : null}
       </CardContent>
     </Card>
   );
