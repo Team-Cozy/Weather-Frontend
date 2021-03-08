@@ -27,6 +27,7 @@ import { useUnitConverters } from 'src/components/UnitConversionProvider';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { mapSliderValues } from '../../../api/utils';
 import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
+import { useLoggedInUser } from '../../../components/UserProvider';
 
 const useStyles = makeStyles(({
   root: {
@@ -127,13 +128,18 @@ SliderEditDialog.propTypes = {
 function ClothingPiece({ piece }) {
   const classes = useStyles();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { user } = useLoggedInUser();
+  const loggedIn = user == null || !user.anonymous;
 
   const handleClose = () => setDialogOpen(false);
   const editButton = (
     <IconButton
       edge="end"
       size="small"
-      onClick={() => { setDialogOpen(true); }}
+      disabled={!loggedIn}
+      onClick={() => {
+        if (loggedIn) setDialogOpen(true);
+      }}
     >
       <Create title="Edit" />
     </IconButton>
@@ -151,9 +157,16 @@ function ClothingPiece({ piece }) {
       <ListItemText
         primary={piece.name}
       />
-      <Tooltip title="Log in to set your preferences!">
+      <Tooltip
+        title={
+          loggedIn
+            ? 'Change your preferences'
+            : 'Log in to set your preferences!'
+        }
+      >
         {editButton}
       </Tooltip>
+
       <SliderEditDialog clothingType={piece.type} open={dialogOpen} handleClose={handleClose} />
     </>
   );
