@@ -195,12 +195,12 @@ export function ZoneAdjustmentSlider({
   const values = preference.clothes.slice(1).map((c) => c.minTemp);
   console.log(values);
 
-  const setValues = (values) => {
+  const setValues = (newValues) => {
     const clothes = [
       preference.clothes[0],
       ...preference.clothes.slice(1).map((c, i) => ({
         ...c,
-        minTemp: values[i],
+        minTemp: newValues[i],
       })),
     ];
     setPreference({
@@ -284,4 +284,4 @@ export function ZoneAdjustmentSlider({
 ZoneAdjustmentSlider.propTypes = {
   preference: PropTypes.object,
   setPreference: PropTypes.func
-}
+};

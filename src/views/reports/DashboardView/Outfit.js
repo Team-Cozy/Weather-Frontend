@@ -8,6 +8,9 @@ import {
   Button,
   Card,
   CardHeader,
+  Dialog,
+  DialogContent,
+  DialogContentText,
   Divider,
   IconButton,
   List,
@@ -28,6 +31,44 @@ const useStyles = makeStyles(({
     width: 48
   }
 }));
+
+function ClothingPiece({ piece }) {
+  const classes = useStyles();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  return (
+    <>
+      <ListItemAvatar>
+        <img
+          alt={piece.name}
+          className={classes.image}
+          src={piece.image}
+        />
+      </ListItemAvatar>
+      <ListItemText
+        primary={piece.name}
+      />
+      <IconButton
+        edge="end"
+        size="small"
+        onClick={() => { setDialogOpen(true); }}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <DialogContent>
+          <DialogContentText>
+            Edit
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+ClothingPiece.propTypes = {
+  piece: PropTypes.object,
+};
 
 const Outfit = ({ className, ...rest }) => {
   const classes = useStyles();
@@ -70,22 +111,7 @@ const Outfit = ({ className, ...rest }) => {
             divider={i < pieces.length - 1}
             key={piece.id}
           >
-            <ListItemAvatar>
-              <img
-                alt={piece.name}
-                className={classes.image}
-                src={piece.image}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={piece.name}
-            />
-            <IconButton
-              edge="end"
-              size="small"
-            >
-              <MoreVertIcon />
-            </IconButton>
+            <ClothingPiece piece={piece} />
           </ListItem>
         ))}
       </List>
