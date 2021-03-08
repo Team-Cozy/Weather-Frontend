@@ -46,6 +46,11 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async updateProfile(index, data) {
+    const response = await this.axios.put(`/profiles/${index}`, data);
+    return response.data;
+  }
+
   getLoginURL() {
     return new URL('/auth/login', this.baseURL).toString();
   }

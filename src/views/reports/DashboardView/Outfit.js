@@ -10,6 +10,7 @@ import {
   CardHeader,
   CircularProgress,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogContentText,
   Divider,
@@ -35,49 +36,99 @@ const useStyles = makeStyles(({
   }
 }));
 
-function SliderEditForm({ clothingType }) {
+function SliderEditDialog({ open, handleClose, clothingType }) {
   const { api } = useBackendAPI();
-
   const { temperature } = useUnitConverters();
+  const [saving, setSaving] = useState(false);
+  const [slider, setSlider] = useState(null);
+
+  const profileIndex = 0;
 
   // TODO get the data in a MUCH better way
-  const [slider, setSlider] = useState(null);
   useEffect(() => {
-    if (slider == null) {
-      api.getProfile(0).then((profile) => {
-        const origSlider = profile.sliders[clothingType];
-        console.log('Got slider', origSlider);
-        setSlider({
-          ...origSlider,
-          pieces: origSlider.pieces.map((node) => (
-            {
-              ...node,
-              min: temperature.convert(node.min)
-            }
-          ))
+    if (!open) return;
+    if (slider != null) return;
 
-        });
+    api.getProfile(profileIndex).then((profile) => {
+      const origSlider = profile.sliders[clothingType];
+      console.log('Got slider', profile);
+      setSlider({
+        ...origSlider,
+        pieces: origSlider.pieces.map((node) => (
+          {
+            ...node,
+            min: temperature.convert(node.min)
+          }
+        ))
       });
-    }
-  }, [slider]);
+    });
+  }, [slider, open]);
 
-  return slider == null ? <CircularProgress /> : (
-    <>
-      <DialogContentText>
-        Edit
-      </DialogContentText>
-      <ZoneAdjustmentSlider domain={temperature.sliderDomain} preference={slider} />
-    </>
+  // Saving side effect
+  useEffect(() => {
+    if (!saving) return;
+
+    (async () => {
+      // Get the current profile data (may have changed)
+      const profile = await api.getProfile(profileIndex);
+
+      // Patch the slider
+      profile.sliders[clothingType] = slider;
+
+      // Send the data back to the backend
+      await api.updateProfile(profileIndex, profile);
+
+      // Close this modal
+      setSaving(false);
+      handleClose();
+    })();
+  }, [saving]);
+
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <DialogContent style={{ width: 500 }}>
+        <DialogContentText>
+          Edit
+          {' '}
+          {clothingType}
+          {' '}
+          values
+        </DialogContentText>
+        {(slider == null)
+          ? <CircularProgress />
+          : (
+            <>
+              <ZoneAdjustmentSlider
+                domain={temperature.sliderDomain}
+                preference={slider}
+                setPreference={setSlider}
+              />
+            </>
+          )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={() => setSaving(true)} color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
-SliderEditForm.propTypes = {
-  clothingType: PropTypes.string
+SliderEditDialog.propTypes = {
+  clothingType: PropTypes.string,
+  handleClose: PropTypes.func,
+  open: PropTypes.bool
 };
 
 function ClothingPiece({ piece }) {
   const classes = useStyles();
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleClose = () => setDialogOpen(false);
 
   return (
     <>
@@ -98,11 +149,7 @@ function ClothingPiece({ piece }) {
       >
         <MoreVertIcon />
       </IconButton>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogContent style={{ width: 500 }}>
-          <SliderEditForm clothingType={piece.type} />
-        </DialogContent>
-      </Dialog>
+      <SliderEditDialog clothingType={piece.type} open={dialogOpen} handleClose={handleClose} />
     </>
   );
 }
