@@ -156,7 +156,7 @@ export const Tick = ({ tick, format = (d) => d }) => {
 };
 
 Tick.propTypes = {
-  tick: PropTypes.number,
+  tick: PropTypes.object,
   format: PropTypes.func
 };
 
@@ -187,25 +187,24 @@ const sliderStyle = {
   touchAction: 'none',
 };
 
-export function ZoneAdjustmentSlider({
+export default function ZoneAdjustmentSlider({
+  domain,
   preference,
-  setPreference,
+  setPreference = () => { },
 }) {
-  const domain = [-10, 45];
-  const values = preference.clothes.slice(1).map((c) => c.minTemp);
-  console.log(values);
+  const values = preference.pieces.slice(0, preference.pieces.length - 1).map((c) => c.min);
 
   const setValues = (newValues) => {
-    const clothes = [
-      preference.clothes[0],
-      ...preference.clothes.slice(1).map((c, i) => ({
+    const pieces = [
+      preference.pieces[0],
+      ...preference.pieces.slice(1).map((c, i) => ({
         ...c,
         minTemp: newValues[i],
       })),
     ];
     setPreference({
       ...preference,
-      clothes,
+      pieces,
     });
   };
 
@@ -218,70 +217,69 @@ export function ZoneAdjustmentSlider({
   };
 
   return (
-    <div style={{ height: 520, width: '100%' }}>
-      <Slider
-        vertical
-        reversed
-        mode={2}
-        step={1}
-        domain={domain}
-        rootStyle={sliderStyle}
-        onUpdate={onUpdate}
-        onChange={onChange}
-        values={values}
-      >
-        <Rail>
-          {({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}
-        </Rail>
-        <Handles>
-          {({ handles, getHandleProps }) => (
-            <div className="slider-handles">
-              {handles.map((handle) => (
-                <Handle
-                  key={handle.id}
-                  handle={handle}
-                  domain={domain}
-                  getHandleProps={getHandleProps}
-                />
-              ))}
-            </div>
-          )}
-        </Handles>
-        <Tracks left right>
-          {({ tracks, getTrackProps }) => (
-            <div className="slider-tracks">
-              {tracks.map(({ id, source, target }, i) => {
-                const range = preference.clothes[i];
+    <Slider
+      vertical
+      reversed
+      mode={2}
+      step={1}
+      domain={domain}
+      rootStyle={sliderStyle}
+      onUpdate={onUpdate}
+      onChange={onChange}
+      values={values}
+    >
+      <Rail>
+        {({ getRailProps }) => <SliderRail getRailProps={getRailProps} />}
+      </Rail>
+      <Handles>
+        {({ handles, getHandleProps }) => (
+          <div className="slider-handles">
+            {handles.map((handle) => (
+              <Handle
+                key={handle.id}
+                handle={handle}
+                domain={domain}
+                getHandleProps={getHandleProps}
+              />
+            ))}
+          </div>
+        )}
+      </Handles>
+      <Tracks left right>
+        {({ tracks, getTrackProps }) => (
+          <div className="slider-tracks">
+            {tracks.map(({ id, source, target }, i) => {
+              const piece = preference.pieces[i];
 
-                return (
-                  <Track
-                    key={id}
-                    source={source}
-                    target={target}
-                    getTrackProps={getTrackProps}
-                  >
-                    {range.clothingType}
-                  </Track>
-                );
-              })}
-            </div>
-          )}
-        </Tracks>
-        <Ticks count={5}>
-          {({ ticks }) => (
-            <div className="slider-ticks">
-              {ticks.map((tick) => (
-                <Tick key={tick.id} tick={tick} />
-              ))}
-            </div>
-          )}
-        </Ticks>
-      </Slider>
-    </div>
+              return (
+                <Track
+                  key={id}
+                  source={source}
+                  target={target}
+                  getTrackProps={getTrackProps}
+                >
+                  {piece.piece.name}
+                </Track>
+              );
+            })}
+          </div>
+        )}
+      </Tracks>
+      <Ticks count={5}>
+        {({ ticks }) => (
+          <div className="slider-ticks">
+            {ticks.map((tick) => (
+              <Tick key={tick.id} tick={tick} />
+            ))}
+          </div>
+        )}
+      </Ticks>
+    </Slider>
   );
 }
 
 ZoneAdjustmentSlider.propTypes = {
   preference: PropTypes.object,
+  domain: PropTypes.array,
   setPreference: PropTypes.func
 };

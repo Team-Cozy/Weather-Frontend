@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   CardHeader,
+  CircularProgress,
   Dialog,
   DialogContent,
   DialogContentText,
@@ -21,6 +22,8 @@ import {
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { useUnitConverters } from 'src/components/UnitConversionProvider';
+import ZoneAdjustmentSlider from '../../../components/ZoneAdjustmentSlider';
 
 const useStyles = makeStyles(({
   root: {
@@ -31,6 +34,46 @@ const useStyles = makeStyles(({
     width: 48
   }
 }));
+
+function SliderEditForm({ clothingType }) {
+  const { api } = useBackendAPI();
+
+  const { temperature } = useUnitConverters();
+
+  // TODO get the data in a MUCH better way
+  const [slider, setSlider] = useState(null);
+  useEffect(() => {
+    if (slider == null) {
+      api.getProfile(0).then((profile) => {
+        const origSlider = profile.sliders[clothingType];
+        console.log('Got slider', origSlider);
+        setSlider({
+          ...origSlider,
+          pieces: origSlider.pieces.map((node) => (
+            {
+              ...node,
+              min: temperature.convert(node.min)
+            }
+          ))
+
+        });
+      });
+    }
+  }, [slider]);
+
+  return slider == null ? <CircularProgress /> : (
+    <>
+      <DialogContentText>
+        Edit
+      </DialogContentText>
+      <ZoneAdjustmentSlider domain={temperature.sliderDomain} preference={slider} />
+    </>
+  );
+}
+
+SliderEditForm.propTypes = {
+  clothingType: PropTypes.string
+};
 
 function ClothingPiece({ piece }) {
   const classes = useStyles();
@@ -56,10 +99,8 @@ function ClothingPiece({ piece }) {
         <MoreVertIcon />
       </IconButton>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-        <DialogContent>
-          <DialogContentText>
-            Edit
-          </DialogContentText>
+        <DialogContent style={{ width: 500 }}>
+          <SliderEditForm clothingType={piece.type} />
         </DialogContent>
       </Dialog>
     </>

@@ -7,6 +7,7 @@ export const fahrenheitConverter = {
   convert: (x) => {
     return (x - 273) * (9 / 5) + 32;
   },
+  sliderDomain: [-30, 120],
   units: '°F'
 };
 
@@ -15,6 +16,7 @@ export const celsiusConverter = {
   convert: (x) => {
     return (x - 273);
   },
+  sliderDomain: [-30, 40],
   units: '°C'
 };
 
