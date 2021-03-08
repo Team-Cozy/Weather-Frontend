@@ -41,23 +41,40 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     }, [api]
   );
 
-  const items = [
-    {
-      href: '/app/dashboard',
-      icon: BarChartIcon,
-      title: 'Dashboard'
-    },
-    {
-      href: '/register',
-      icon: UserIcon,
-      title: 'Preferences'
-    },
-    {
-      href: user.anonymous === true ? api.getLoginURL() : api.getLogoutURL(),
-      icon: LockIcon,
-      title: user.anonymous === true ? 'Login' : 'Logout'
-    }
-  ];
+  let items;
+
+  if (user.anonymous === true) {
+    items = [
+      {
+        href: '/app/dashboard',
+        icon: BarChartIcon,
+        title: 'Dashboard'
+      },
+      {
+        href: api.getLoginURL(),
+        icon: LockIcon,
+        title: 'Login'
+      }
+    ];
+  } else {
+    items = [
+      {
+        href: '/app/dashboard',
+        icon: BarChartIcon,
+        title: 'Dashboard'
+      },
+      {
+        href: '/register',
+        icon: UserIcon,
+        title: 'Preferences'
+      },
+      {
+        href: api.getLogoutURL(),
+        icon: LockIcon,
+        title: 'Logout'
+      }
+    ];
+  }
 
   useEffect(() => {
     if (openMobile && onMobileClose) {

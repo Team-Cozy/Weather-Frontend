@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -6,7 +6,8 @@ import {
   Typography,
   makeStyles,
   Slider,
-  Button
+  Button,
+  CircularProgress
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
@@ -23,8 +24,23 @@ const useStyles = makeStyles((theme) => ({
 const RegisterView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [preferences, setPreferences] = useState(null);
+  const [initial, setInitial] = useState(null);
   const { api } = useBackendAPI();
-  const [preferences, setPreferences] = useState({ gets_cold: 5, likes_hot: 5, gets_burnt: 5 });
+
+  useEffect(
+    () => {
+      api.getCurrentUser().then((user) => {
+        if (user.anonymous) {
+          setPreferences({ gets_cold: 5, likes_hot: 5, gets_burnt: 5 });
+          setInitial({ gets_cold: 5, likes_hot: 5, gets_burnt: 5 });
+        } else {
+          setPreferences(user.preferences);
+          setInitial(user.preferences);
+        }
+      });
+    }, [api]
+  );
 
   const handleChange = (event, name) => {
     const { ariaValueNow } = event.target;
@@ -42,6 +58,63 @@ const RegisterView = () => {
     api.updatePreferences(preferences);
     navigate('/app/dashboard');
   };
+
+  let getsCold;
+  if (initial == null) {
+    getsCold = <CircularProgress />;
+  } else {
+    getsCold = (
+      <Slider
+        defaultValue={initial.gets_cold}
+        valueLabelDisplay="auto"
+        step={1}
+        marks
+        min={1}
+        max={10}
+        aria-valuemin={1}
+        aria-valuemax={10}
+        onChange={(e) => handleChange(e, 'gets_cold')}
+      />
+    );
+  }
+
+  let likesHot;
+  if (initial == null) {
+    likesHot = <CircularProgress />;
+  } else {
+    likesHot = (
+      <Slider
+        defaultValue={initial.likes_hot}
+        valueLabelDisplay="auto"
+        step={1}
+        marks
+        min={1}
+        max={10}
+        aria-valuemin={1}
+        aria-valuemax={10}
+        onChange={(e) => handleChange(e, 'likes_hot')}
+      />
+    );
+  }
+
+  let getsBurnt;
+  if (initial == null) {
+    getsBurnt = <CircularProgress />;
+  } else {
+    getsBurnt = (
+      <Slider
+        defaultValue={initial.gets_burnt}
+        valueLabelDisplay="auto"
+        step={1}
+        marks
+        min={1}
+        max={10}
+        aria-valuemin={1}
+        aria-valuemax={10}
+        onChange={(e) => handleChange(e, 'gets_burnt')}
+      />
+    );
+  }
 
   return (
     <Page
@@ -74,45 +147,15 @@ const RegisterView = () => {
             <Typography id="gets_cold" gutterBottom>
               I get cold easily.
             </Typography>
-            <Slider
-              defaultValue={5}
-              valueLabelDisplay="auto"
-              step={1}
-              marks
-              min={1}
-              max={10}
-              aria-valuemin={1}
-              aria-valuemax={10}
-              onChange={(e) => handleChange(e, 'gets_cold')}
-            />
+            {getsCold}
             <Typography id="likes_hot" gutterBottom>
               I would rather be hot than cold.
             </Typography>
-            <Slider
-              defaultValue={5}
-              valueLabelDisplay="auto"
-              step={1}
-              marks
-              min={1}
-              max={10}
-              aria-valuemin={1}
-              aria-valuemax={10}
-              onChange={(e) => handleChange(e, 'likes_hot')}
-            />
+            {likesHot}
             <Typography id="gets_burnt" gutterBottom>
               I get sunburnt easily.
             </Typography>
-            <Slider
-              defaultValue={5}
-              valueLabelDisplay="auto"
-              step={1}
-              marks
-              min={1}
-              max={10}
-              aria-valuemin={1}
-              aria-valuemax={10}
-              onChange={(e) => handleChange(e, 'gets_burnt')}
-            />
+            {getsBurnt}
             <Box my={2}>
               <Button
                 color="primary"
