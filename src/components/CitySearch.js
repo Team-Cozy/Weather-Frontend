@@ -11,7 +11,11 @@ const filter = createFilterOptions();
 export default function CitySearch() {
   const { location, setLocation } = useUserLocation();
   const value = location instanceof CityLocation ? location.data : null;
-  const setValue = (newValue) => setLocation(new CityLocation(newValue));
+  const setValue = (newValue) => {
+    if (newValue) {
+      setLocation(new CityLocation(newValue));
+    }
+  };
 
   const { api } = useBackendAPI();
   const [inputValue, setInputValue] = useState('');

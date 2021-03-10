@@ -53,15 +53,18 @@ function OutfitCard({ className, ...rest }) {
     setOutfit(null);
   };
 
+  useEffect(() => {
+    setOutfit(null);
+  }, [location]);
+
   // Update outfit when position is changed
   useEffect(() => {
     // Only update outfit if we don't have an outfit yet
-    if (outfit != null) return;
+    if (outfit) return;
 
     // Only update outfit if we have a location
     console.log('Got position', location);
-    if (location == null) return;
-    console.log('Got position', location);
+    if (!location) return;
 
     console.log('fetching outfit');
     api.getOutfit(location).then((response) => {
