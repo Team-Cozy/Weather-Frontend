@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, CircularProgress } from '@material-ui/core';
-import { LocationOn, LocationSearching } from '@material-ui/icons';
+import { LocationSearching } from '@material-ui/icons';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { CoordinateLocation } from '../../api/Location';
 
@@ -12,12 +12,10 @@ function geolocationPromise(options) {
 
 export default function GPSLocationButton() {
   const [searching, setSearching] = useState(false);
-  const { location, setLocation } = useUserLocation();
+  const { setLocation } = useUserLocation();
 
   let inner;
-  if (location) {
-    inner = <LocationOn color="inherit" />;
-  } else if (searching) {
+  if (searching) {
     inner = <CircularProgress color="inherit" />;
   } else {
     inner = <LocationSearching color="inherit" />;
