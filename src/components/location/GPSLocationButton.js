@@ -16,25 +16,27 @@ export default function GPSLocationButton() {
 
   let inner;
   if (location) {
-    inner = <LocationOn />;
+    inner = <LocationOn color="inherit" />;
   } else if (searching) {
-    inner = <CircularProgress />;
+    inner = <CircularProgress color="inherit" />;
   } else {
-    inner = <LocationSearching />;
+    inner = <LocationSearching color="inherit" />;
   }
 
   return (
-    <Button onClick={async () => {
-      setSearching(true);
-      const geolocation = await geolocationPromise();
-      setLocation(
-        new CoordinateLocation(
-          geolocation.coords.latitude,
-          geolocation.coords.longitude
-        )
-      );
-      setSearching(false);
-    }}
+    <Button
+      color="inherit"
+      onClick={async () => {
+        setSearching(true);
+        const geolocation = await geolocationPromise();
+        setLocation(
+          new CoordinateLocation(
+            geolocation.coords.latitude,
+            geolocation.coords.longitude
+          )
+        );
+        setSearching(false);
+      }}
     >
       {inner}
     </Button>

@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
-import { Grid, TextField, Typography } from '@material-ui/core';
+import {
+  Grid, TextField, Typography
+} from '@material-ui/core';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { CityLocation } from 'src/api/Location';
 
@@ -60,7 +62,13 @@ export default function CitySearch() {
       style={{ width: 300 }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="What city are you in?" variant="outlined" />
+        <TextField
+          {...params}
+          InputProps={{ style: { color: 'white' } }}
+          InputLabelProps={{ style: { color: 'lightgray' } }}
+          label="What city are you in?"
+          variant="outlined"
+        />
       )}
     />
   );
