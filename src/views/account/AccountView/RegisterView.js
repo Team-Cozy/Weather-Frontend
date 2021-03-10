@@ -42,15 +42,11 @@ const RegisterView = () => {
     }, [api]
   );
 
-  const handleChange = (event, name) => {
-    const { ariaValueNow } = event.target;
-
-    if (ariaValueNow != null) {
-      setPreferences({
-        ...preferences,
-        [name]: parseInt(ariaValueNow, 10),
-      });
-    }
+  const handleChange = (value, name) => {
+    setPreferences({
+      ...preferences,
+      [name]: parseInt(value, 10),
+    });
   };
 
   const handleSubmit = () => {
@@ -73,7 +69,7 @@ const RegisterView = () => {
         max={10}
         aria-valuemin={1}
         aria-valuemax={10}
-        onChange={(e) => handleChange(e, 'gets_cold')}
+        onChange={(e, value) => handleChange(value, 'gets_cold')}
       />
     );
   }
@@ -92,7 +88,7 @@ const RegisterView = () => {
         max={10}
         aria-valuemin={1}
         aria-valuemax={10}
-        onChange={(e) => handleChange(e, 'likes_hot')}
+        onChange={(e, value) => handleChange(value, 'likes_hot')}
       />
     );
   }
@@ -111,7 +107,7 @@ const RegisterView = () => {
         max={10}
         aria-valuemin={1}
         aria-valuemax={10}
-        onChange={(e) => handleChange(e, 'gets_burnt')}
+        onChange={(e, value) => handleChange(value, 'gets_burnt')}
       />
     );
   }
