@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -12,7 +12,6 @@ import {
 import {
   BarChart as BarChartIcon,
   Lock as LockIcon,
-  Settings as SettingsIcon,
   User as UserIcon,
 } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
@@ -34,34 +33,48 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
   const { api } = useBackendAPI();
+  const [user, setUser] = useState({ anonymous: true });
 
-  const items = [
-    {
-      href: '/app/dashboard',
-      icon: BarChartIcon,
-      title: 'Dashboard'
-    },
-    {
-      href: '/app/account',
-      icon: UserIcon,
-      title: 'Account'
-    },
-    {
-      href: '/app/settings',
-      icon: SettingsIcon,
-      title: 'Settings'
-    },
-    {
-      href: api.getLoginURL(),
-      icon: LockIcon,
-      title: 'Login'
-    },
-    {
-      href: api.getLogoutURL(),
-      icon: LockIcon,
-      title: 'Logout'
-    }
-  ];
+  useEffect(
+    () => {
+      api.getCurrentUser().then(setUser);
+    }, [api]
+  );
+
+  let items;
+
+  if (user.anonymous === true) {
+    items = [
+      {
+        href: '/app/dashboard',
+        icon: BarChartIcon,
+        title: 'Dashboard'
+      },
+      {
+        href: api.getLoginURL(),
+        icon: LockIcon,
+        title: 'Login'
+      }
+    ];
+  } else {
+    items = [
+      {
+        href: '/app/dashboard',
+        icon: BarChartIcon,
+        title: 'Dashboard'
+      },
+      {
+        href: '/register',
+        icon: UserIcon,
+        title: 'Preferences'
+      },
+      {
+        href: api.getLogoutURL(),
+        icon: LockIcon,
+        title: 'Logout'
+      }
+    ];
+  }
 
   useEffect(() => {
     if (openMobile && onMobileClose) {

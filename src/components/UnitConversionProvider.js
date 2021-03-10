@@ -33,7 +33,19 @@ export const mphConverter = {
   convertBack: (x) => {
     return x / 2.23694;
   },
+  sliderDomain: [0, 80],
   units: 'mph'
+};
+
+export const uvConverter = {
+  convert: (x) => {
+    return x;
+  },
+  convertBack: (x) => {
+    return x;
+  },
+  sliderDomain: [0, 25],
+  units: 'UVI'
 };
 
 /**
@@ -50,7 +62,7 @@ export function UnitConversionProvider({ children }) {
   return (
     <UnitConversionContext.Provider
       value={{
-        temperature, setTemperature, speed, setSpeed
+        temperature, setTemperature, speed, setSpeed, uv: uvConverter
       }}
     >
       {children}

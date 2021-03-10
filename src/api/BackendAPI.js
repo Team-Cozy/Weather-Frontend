@@ -41,6 +41,11 @@ export default class BackendAPI {
     return response.data;
   }
 
+  async updatePreferences(preferences) {
+    const response = await this.axios.post('/preferences', preferences);
+    return response;
+  }
+
   async getProfile(index) {
     const response = await this.axios.get(`/profiles/${index}`);
     return response.data;
