@@ -87,7 +87,7 @@ const CurrentWeather = ({ className, ...rest }) => {
   // Update weather when position is changed
   useEffect(() => {
     // Only update weather if there's a position
-    if (location == null || location.data == null) return;
+    if (!location) return;
     console.log('Got position', location);
 
     api.getCurrentWeatherAt(location)
