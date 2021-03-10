@@ -31,6 +31,8 @@ export default function CitySearch() {
     }
   }, [api, inputValue]);
 
+  console.log(suggestions);
+
   return (
     <Autocomplete
       value={value}
@@ -41,18 +43,19 @@ export default function CitySearch() {
         const filtered = filter(options, params);
         return filtered;
       }}
-      onInputChange={(_event, newInputValue) => {
+      onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
       selectOnFocus
       handleHomeEndKeys
-      clearOnBlur
       id="free-solo-with-text-demo"
       options={suggestions}
       getOptionLabel={(option) => {
         return option.full_name;
       }}
+      freeSolo
       renderOption={(option) => {
+        console.log(option);
         return (
           <Grid container alignItems="center">
             <Grid item xs>
@@ -64,14 +67,13 @@ export default function CitySearch() {
         );
       }}
       style={{ width: 300 }}
-      freeSolo
       renderInput={(params) => (
         <TextField
           {...params}
-          InputProps={{ style: { color: 'white' } }}
-          InputLabelProps={{ style: { color: 'lightgray' } }}
+          InputProps={{ ...params.InputProps, style: { color: 'white' } }}
+          InputLabelProps={{ ...params.InputLabelProps, style: { color: 'lightgray' } }}
           label="What city are you in?"
-          variant="outlined"
+          variant="filled"
         />
       )}
     />
