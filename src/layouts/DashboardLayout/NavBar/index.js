@@ -12,7 +12,6 @@ import {
 import {
   BarChart as BarChartIcon,
   Lock as LockIcon,
-  User as UserIcon,
 } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import NavItem from './NavItem';
@@ -62,11 +61,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         href: '/app/dashboard',
         icon: BarChartIcon,
         title: 'Dashboard'
-      },
-      {
-        href: '/register',
-        icon: UserIcon,
-        title: 'Preferences'
       },
       {
         href: api.getLogoutURL(),
