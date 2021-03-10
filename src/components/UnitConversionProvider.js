@@ -7,14 +7,22 @@ export const fahrenheitConverter = {
   convert: (x) => {
     return (x - 273) * (9 / 5) + 32;
   },
+  convertBack: (x) => {
+    return (x - 32) * (5 / 9) + 273;
+  },
+  sliderDomain: [-30, 120],
   units: '°F'
 };
 
 // eslint-disable-next-line no-unused-vars
 export const celsiusConverter = {
   convert: (x) => {
-    return (x - 273);
+    return x - 273;
   },
+  convertBack: (x) => {
+    return x + 273;
+  },
+  sliderDomain: [-30, 40],
   units: '°C'
 };
 
@@ -22,7 +30,22 @@ export const mphConverter = {
   convert: (x) => {
     return 2.23694 * x;
   },
+  convertBack: (x) => {
+    return x / 2.23694;
+  },
+  sliderDomain: [0, 80],
   units: 'mph'
+};
+
+export const uvConverter = {
+  convert: (x) => {
+    return x;
+  },
+  convertBack: (x) => {
+    return x;
+  },
+  sliderDomain: [0, 25],
+  units: 'UVI'
 };
 
 /**
@@ -39,7 +62,7 @@ export function UnitConversionProvider({ children }) {
   return (
     <UnitConversionContext.Provider
       value={{
-        temperature, setTemperature, speed, setSpeed
+        temperature, setTemperature, speed, setSpeed, uv: uvConverter
       }}
     >
       {children}
@@ -53,4 +76,17 @@ UnitConversionProvider.propTypes = {
 
 export function useUnitConverters() {
   return useContext(UnitConversionContext);
+}
+
+export function getUnitConverterByKey(converters, sliderKey) {
+  switch (sliderKey) {
+    case 'temp':
+      return converters.temperature;
+    case 'uv':
+      return converters.uv;
+    case 'speed':
+      return converters.speed;
+    default:
+      throw Error(`Unsupported key ${sliderKey}`);
+  }
 }

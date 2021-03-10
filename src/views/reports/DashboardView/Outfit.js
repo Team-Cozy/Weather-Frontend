@@ -1,115 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import { useBackendAPI } from 'src/components/BackendAPIProvider';
-import { useUserLocation } from 'src/components/UserLocationProvider';
 import {
-  Box,
-  Button,
   Card,
+  CardContent,
   CardHeader,
+  CircularProgress,
   Divider,
-  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
-  ListItemText,
-  makeStyles
+  makeStyles,
+  Typography
 } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import clsx from 'clsx';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { useBackendAPI } from 'src/components/BackendAPIProvider';
+import { useUserLocation } from 'src/components/UserLocationProvider';
+import ClothingPiece from '../../../components/ClothingPiece';
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles({
   root: {
     height: '100%'
-  },
-  image: {
-    height: 48,
-    width: 48
   }
-}));
+});
 
-const Outfit = ({ className, ...rest }) => {
+function Outfit({ outfit, onUpdate }) {
+  const pieces = Object.entries(outfit.pieces);
+
+  return (
+    <List>
+      {pieces.map(([type, piece], i) => (
+        <ListItem divider={i < pieces.length - 1} key={type}>
+          <ClothingPiece onUpdate={onUpdate} piece={piece} />
+        </ListItem>
+      ))}
+    </List>
+  );
+}
+
+Outfit.propTypes = {
+  outfit: PropTypes.object,
+  onUpdate: PropTypes.func
+};
+
+function OutfitCard({ className, ...rest }) {
   const classes = useStyles();
   const [outfit, setOutfit] = useState(null);
   const { location } = useUserLocation();
 
   const { api } = useBackendAPI();
 
+  const onUpdate = () => {
+    console.log('updated');
+    setOutfit(null);
+  };
+
   // Update outfit when position is changed
   useEffect(() => {
-    // Only update outfit if there's a position
+    // Only update outfit if we don't have an outfit yet
+    if (outfit != null) return;
+
+    // Only update outfit if we have a location
     if (location == null || location.data == null) return;
     console.log('Got position', location);
 
-    api.getOutfit(location)
-      .then((response) => {
-        console.log(response);
-        setOutfit(response);
-      });
-  }, [location]);
+    console.log('fetching outfit');
+    api.getOutfit(location).then((response) => {
+      setOutfit(response);
+    });
+  }, [api, location, outfit]);
 
-  if (outfit == null) {
-    return 'You must enter location to get an outfit suggestion';
+  let content;
+  if (location == null) {
+    content = (
+      <CardContent>
+        <Typography>Please choose a location first.</Typography>
+      </CardContent>
+    );
+  } else if (outfit == null) {
+    content = (
+      <CardContent>
+        <CircularProgress />
+      </CardContent>
+    );
+  } else {
+    content = <Outfit outfit={outfit} onUpdate={onUpdate} />;
   }
 
-  const { pieces } = outfit;
-
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <CardHeader
-        title="Outfit Suggestion!"
-      />
+    <Card className={clsx(classes.root, className)} {...rest}>
+      <CardHeader title="Outfit Suggestion!" />
       <Divider />
-      <List>
-        {Object.entries(pieces).map(([, piece], i) => (
-          <ListItem
-            divider={i < pieces.length - 1}
-            key={piece.type}
-          >
-            <ListItemAvatar>
-              <img
-                alt={piece.name}
-                className={classes.image}
-                src={piece.image}
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={piece.name}
-            />
-            <IconButton
-              edge="end"
-              size="small"
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-        p={2}
-      >
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
-      </Box>
+      {content}
     </Card>
   );
-};
+}
 
-Outfit.propTypes = {
+OutfitCard.propTypes = {
   className: PropTypes.string
 };
 
-export default Outfit;
+export default OutfitCard;

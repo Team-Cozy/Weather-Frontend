@@ -9,6 +9,7 @@ import routes from 'src/routes';
 import { BackendAPIProvider } from './components/BackendAPIProvider';
 import { UnitConversionProvider } from './components/UnitConversionProvider';
 import { UserLocationProvider } from './components/UserLocationProvider';
+import { UserProvider } from './components/UserProvider';
 
 const App = () => {
   const routing = useRoutes(routes);
@@ -17,10 +18,12 @@ const App = () => {
     <UnitConversionProvider>
       <BackendAPIProvider>
         <UserLocationProvider>
-          <ThemeProvider theme={theme}>
-            <GlobalStyles />
-            {routing}
-          </ThemeProvider>
+          <UserProvider>
+            <ThemeProvider theme={theme}>
+              <GlobalStyles />
+              {routing}
+            </ThemeProvider>
+          </UserProvider>
         </UserLocationProvider>
       </BackendAPIProvider>
     </UnitConversionProvider>
