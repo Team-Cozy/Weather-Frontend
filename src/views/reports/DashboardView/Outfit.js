@@ -59,7 +59,8 @@ function OutfitCard({ className, ...rest }) {
     if (outfit != null) return;
 
     // Only update outfit if we have a location
-    if (location == null || location.data == null) return;
+    console.log('Got position', location);
+    if (location == null) return;
     console.log('Got position', location);
 
     console.log('fetching outfit');
