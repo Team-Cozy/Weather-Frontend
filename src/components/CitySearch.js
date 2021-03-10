@@ -2,7 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
-import { Grid, TextField, Typography } from '@material-ui/core';
+import {
+  Grid, TextField, Typography
+} from '@material-ui/core';
 import { useUserLocation } from 'src/components/UserLocationProvider';
 import { CityLocation } from 'src/api/Location';
 
@@ -29,6 +31,8 @@ export default function CitySearch() {
     }
   }, [api, inputValue]);
 
+  console.log(suggestions);
+
   return (
     <Autocomplete
       value={value}
@@ -39,18 +43,19 @@ export default function CitySearch() {
         const filtered = filter(options, params);
         return filtered;
       }}
-      onInputChange={(_event, newInputValue) => {
+      onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
       }}
       selectOnFocus
       handleHomeEndKeys
-      clearOnBlur
       id="free-solo-with-text-demo"
       options={suggestions}
       getOptionLabel={(option) => {
         return option.full_name;
       }}
+      freeSolo
       renderOption={(option) => {
+        console.log(option);
         return (
           <Grid container alignItems="center">
             <Grid item xs>
@@ -62,9 +67,14 @@ export default function CitySearch() {
         );
       }}
       style={{ width: 300 }}
-      freeSolo
       renderInput={(params) => (
-        <TextField {...params} label="What city are you in?" variant="outlined" />
+        <TextField
+          {...params}
+          InputProps={{ ...params.InputProps, style: { color: 'white' } }}
+          InputLabelProps={{ ...params.InputLabelProps, style: { color: 'lightgray' } }}
+          label="What city are you in?"
+          variant="filled"
+        />
       )}
     />
   );

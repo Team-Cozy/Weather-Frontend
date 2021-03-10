@@ -14,7 +14,6 @@ import { ArrowUp, CloudRain } from 'react-feather';
 import { useBackendAPI } from 'src/components/BackendAPIProvider';
 import { useUnitConverters } from 'src/components/UnitConversionProvider';
 import { useUserLocation } from 'src/components/UserLocationProvider';
-import UserLocationForm from '../../../components/UserLocationForm';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,7 +87,7 @@ const CurrentWeather = ({ className, ...rest }) => {
   // Update weather when position is changed
   useEffect(() => {
     // Only update weather if there's a position
-    if (location == null || location.data == null) return;
+    if (!location) return;
     console.log('Got position', location);
 
     api.getCurrentWeatherAt(location)
@@ -97,18 +96,14 @@ const CurrentWeather = ({ className, ...rest }) => {
       });
   }, [location]);
 
-  let style = null;
-  if (weather == null) {
-    style = { height: 150 };
-  } else {
-    style = { height: 250 };
-  }
-
   return (
-    <Card className={clsx(classes.root, className)} {...rest} style={style}>
+    <Card className={clsx(classes.root, className)} {...rest} style={{ minHeight: 150 }}>
       <CardContent>
-        <UserLocationForm />
-        {weather != null ? <WeatherCardInner weather={weather} /> : null}
+        {
+          weather != null
+            ? <WeatherCardInner weather={weather} />
+            : <Typography>Please select a location on the toolbar.</Typography>
+        }
       </CardContent>
     </Card>
   );

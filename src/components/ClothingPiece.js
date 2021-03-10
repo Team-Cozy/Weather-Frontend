@@ -142,7 +142,6 @@ export default function ClothingPiece({ piece, onUpdate = () => { } }) {
     <IconButton
       edge="end"
       size="small"
-      disabled={!loggedIn}
       onClick={() => {
         if (loggedIn) setDialogOpen(true);
       }}
