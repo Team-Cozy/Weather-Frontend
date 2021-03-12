@@ -46,5 +46,6 @@ Our JavaScript code follows the [AirBnB style guide](https://github.com/airbnb/j
 
 ## Additional links
 
+- [Use Case Diagram/UML Class Diagram] (https://github.com/Team-Cozy/Weather-Frontend.wiki.git)
 - Figma [UI Prototype](https://www.figma.com/file/NH1r8TgbBm1EXlKbMCFY1Y/?node-id=0%3A10) (last updated February 12)
 - [Backend](https://github.com/Team-Cozy/Weather-Backend)
