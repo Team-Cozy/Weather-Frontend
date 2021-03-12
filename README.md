@@ -10,3 +10,5 @@ Use Case Diagram (Last Updated 02/03/2021)
 
 UML Class Diagram (Last Updated 02/12/2021)
 ![UML CLass Diagram](./images/ClassDiagram.jpg)
+
+UI Prototype: https://www.figma.com/file/NH1r8TgbBm1EXlKbMCFY1Y/?node-id=0%3A10
