@@ -4,6 +4,9 @@ Have you ever been poorly dressed for the weather? Never again, with the Cozy Ap
 
 Our javascript code follows the style guide specified by https://github.com/airbnb/javascript. We use a .eslintrc to configure the requirements. 
 
+How To Run Frontend: 
+`npm run start`
+
 Use Case Diagram (Last Updated 02/03/2021)
 ![Use Case Diagram](./images/UseCases.jpg)
 
