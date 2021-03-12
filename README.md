@@ -1,6 +1,6 @@
 # Weather Clothing Suggestion App
 
-An app that suggests clothing based on the weather
+Have you ever been poorly dressed for the weather? Never again, with the Cozy App! This app takes in either the user’s location data or a city entered by the user to retrieve the corresponding weather data. Based on this weather data and the user’s customizable temperature/outfit preferences, this app makes suggestions to the user regarding what outfit they should wear for the current weather!
 
 Our javascript code follows the style guide specified by https://github.com/airbnb/javascript. We use a .eslintrc to configure the requirements. 
 
